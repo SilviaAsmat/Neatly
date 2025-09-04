@@ -1,4 +1,13 @@
 package silas.dev.neatly.data.room.collection
 
-class CollectionsDao {
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+
+@Dao
+interface CollectionsDao {
+    @Insert(onConflict = 1)
+    fun insertCollection(collection: CollectionsEntity)
+    @Delete
+    fun deleteCollection(collection: CollectionsEntity)
 }
