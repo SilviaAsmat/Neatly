@@ -7,10 +7,10 @@ import androidx.room.Transaction
 @Dao
 interface CollectionProductsCrossRefDao {
     @Transaction
-    @Query("SELECT collectionId FROM collections")
+    @Query("SELECT * FROM collections WHERE collectionId = :collectionId")
     suspend fun getCollectionWithProducts(collectionId: Int): CollectionWithProducts
 
     @Transaction
-    @Query("SELECT productId FROM product_info")
+    @Query("SELECT * FROM product_info WHERE productId = :productId")
     suspend fun getProductsWithCollection(productId: Int): ProductWithCollections
 }
