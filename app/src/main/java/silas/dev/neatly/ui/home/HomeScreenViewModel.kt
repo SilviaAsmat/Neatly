@@ -14,13 +14,11 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
-
     private val _collectionsViewState = MutableStateFlow<CollectionsViewState>(CollectionsViewState.Loading)
     val collectionsViewState: StateFlow<CollectionsViewState> = _collectionsViewState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-
 
         }
 
