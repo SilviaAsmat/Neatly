@@ -1,4 +1,8 @@
 package silas.dev
 
-class NeatlyApplication {
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class NeatlyApplication: Application() {
 }
