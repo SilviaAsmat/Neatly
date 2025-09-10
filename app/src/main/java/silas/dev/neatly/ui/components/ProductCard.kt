@@ -2,6 +2,7 @@ package silas.dev.neatly.ui.components
 
 import android.graphics.fonts.FontStyle
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,18 +17,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import silas.dev.neatly.domain.ProductInfo
+import silas.dev.neatly.ui.products.ProductInfoViewState
 
 @Composable
 fun ProductCard(
-    productInfo: ProductInfo,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    productInfo: ProductInfoViewState,
+    onProductClick: (ProductInfoViewState) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .padding(8.dp)
             .background(Color.White)
+            .clickable { onProductClick(productInfo) }
     )
     {
         Box(
@@ -37,7 +38,7 @@ fun ProductCard(
                 .height(150.dp)
                 .width(150.dp)
         ) {
-            // TODO: Add image here
+            // TODO: Add image here, might not need Box, also image might not exist
         }
         Column(
             modifier = Modifier
@@ -57,7 +58,6 @@ fun ProductCard(
                 fontSize = 12.sp
             )
         }
-        DropdownMenu(onEditClick, onDeleteClick)
     }
 }
 
@@ -65,11 +65,11 @@ fun ProductCard(
 @Composable
 fun ProductCardPreview() {
     ProductCard(
-        productInfo = ProductInfo(
+        productInfo = ProductInfoViewState(
             name = "item name",
             description = "blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah",
-            upcCode = "123456789"
+            id = 0
         ),
-        onEditClick = { },
-    ) { }
+        onProductClick = { Unit } ,
+    )
 }
