@@ -25,9 +25,8 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val collectionsWithProducts = repo.getCollectionsWithProducts()
-            val data = HomeScreenViewState.Data(
-                rows = collectionsWithProducts.map { collectionWithProducts ->
+            repo.getCollectionsWithProducts().collect { collectionsWithProducts ->
+                val rows = collectionsWithProducts.map { collectionWithProducts ->
                     CollectionRowViewState(
                         collection = CollectionInfoViewState(
                             id = collectionWithProducts.collection.collectionId,
@@ -43,9 +42,10 @@ class HomeScreenViewModel @Inject constructor(
                         }
                     )
                 }
-            )
-            _homeScreenViewState.update {
-                data
+                val data = HomeScreenViewState.Data(rows)
+                _homeScreenViewState.update {
+                    data
+                }
             }
         }
     }

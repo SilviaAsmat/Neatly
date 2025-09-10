@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CollectionsDao {
@@ -13,5 +14,8 @@ interface CollectionsDao {
     fun deleteCollection(collection: CollectionsEntity)
     @Query("SELECT * FROM collections")
     fun getAllCollections(): List<CollectionsEntity>
+
+    @Query("SELECT * FROM collections")
+    fun getAllCollectionsFlow(): Flow<List<CollectionsEntity>>
 
 }

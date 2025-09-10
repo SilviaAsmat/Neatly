@@ -1,5 +1,9 @@
 package silas.dev.neatly.data
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import silas.dev.neatly.data.room.NeatlyDatabase
 import silas.dev.neatly.data.room.collection.CollectionsEntity
 import silas.dev.neatly.data.room.product_info.ProductInfoEntity
@@ -69,34 +73,34 @@ class RepositoryImpl @Inject constructor(
         }
         return mapped
     }
+    
+    override suspend fun getCollectionsWithProducts(): Flow<List<CollectionWithProducts>> =
+        database.collectionsDao().getAllCollectionsFlow().map { collectionEntities ->
+            val mapped = collectionEntities.map { collectionEntity ->
+                val products = database
+                    .collectionProductsCrossRefDao()
+                    .getCollectionWithProducts(collectionEntity.collectionId)
+                // Map from entity to domain model
+                CollectionWithProducts(
+                    collection = CollectionInfo(
+                        collectionId = collectionEntity.collectionId,
+                        name = collectionEntity.name,
+                        description = collectionEntity.description
+                    ),
+                    products = products.products.map { productEntity ->
+                        ProductInfo(
+                            name = productEntity.name,
+                            description = productEntity.description,
+                            upcCode = productEntity.upcCode,
+                            id = productEntity.productId
+                        )
+                    }
+                )
+            }
+            mapped
 
-    // TODO convert to Flow
-    override suspend fun getCollectionsWithProducts(): List<CollectionWithProducts> {
-        val collections = database.collectionsDao().getAllCollections()
-        val mapped = collections.map { collectionEntity ->
-            val products = database
-                .collectionProductsCrossRefDao()
-                .getCollectionWithProducts(collectionEntity.collectionId)
+        }.flowOn(Dispatchers.IO)
 
-            // Map from entity to domain model
-            CollectionWithProducts(
-                collection = CollectionInfo(
-                    collectionId = collectionEntity.collectionId,
-                    name = collectionEntity.name,
-                    description = collectionEntity.description
-                ),
-                products = products.products.map { productEntity ->
-                    ProductInfo(
-                        name = productEntity.name,
-                        description = productEntity.description,
-                        upcCode = productEntity.upcCode,
-                        id = productEntity.productId
-                    )
-                }
-            )
-        }
-        return mapped
-    }
 
     //TODO: Add Delete product/collection
 }
