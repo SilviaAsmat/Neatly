@@ -14,8 +14,9 @@ interface CollectionsDao {
     fun deleteCollection(collection: CollectionsEntity)
     @Query("SELECT * FROM collections")
     fun getAllCollections(): List<CollectionsEntity>
-
     @Query("SELECT * FROM collections")
     fun getAllCollectionsFlow(): Flow<List<CollectionsEntity>>
+    @Query("SELECT * FROM collections WHERE name = :name")
+    fun getCollectionByName(name: String): CollectionsEntity
 
 }

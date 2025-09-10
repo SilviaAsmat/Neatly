@@ -8,6 +8,8 @@ import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
+import silas.dev.neatly.ui.collections.CollectionScreen
+import silas.dev.neatly.ui.collections.CollectionScreenViewModel
 import silas.dev.neatly.ui.home.HomeScreen
 import silas.dev.neatly.ui.home.HomeScreenViewModel
 import silas.dev.neatly.ui.products.ProductScreen
@@ -18,6 +20,9 @@ object MainScreen
 
 @Serializable
 data class ProductScreen(val productId: Int)
+
+@Serializable
+data class CollectionScreen(val collectionName: String)
 
 @Composable
 fun MainNavHost(
@@ -35,6 +40,9 @@ fun MainNavHost(
                 viewModel = homeScreenViewModel,
                 onProductClick = { productInfoViewState ->
                     navController.navigate(route = ProductScreen(productId = productInfoViewState.id))
+                },
+                onCollectionClick = { collectionName ->
+                    navController.navigate(route = CollectionScreen(collectionName))
                 }
             )
         }
@@ -45,7 +53,14 @@ fun MainNavHost(
             )
         }
 
-
+        composable<CollectionScreen> {backStackEntry ->
+            val name = backStackEntry.arguments?.getString("collectionName")
+            val collectionScreenViewModel: CollectionScreenViewModel = hiltViewModel()
+            collectionScreenViewModel.initWithName(name!!)
+            CollectionScreen(
+                viewModel = collectionScreenViewModel
+            )
+        }
     }
 
 }

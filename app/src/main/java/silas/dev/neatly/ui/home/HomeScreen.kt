@@ -18,9 +18,10 @@ import silas.dev.neatly.ui.products.ProductInfoViewState
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
     onProductClick: (ProductInfoViewState) -> Unit,
+    onCollectionClick: (String) -> Unit
 ) {
     val viewState by viewModel.homeScreenViewState.collectAsState()
-    HomeScreen(viewState, onProductClick, viewModel::onAddCollection)
+    HomeScreen(viewState, onProductClick, viewModel::onAddCollection, onCollectionClick)
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -28,7 +29,8 @@ fun HomeScreen(
 private fun HomeScreen(
     homeViewState: HomeScreenViewState,
     onProductClick: (ProductInfoViewState) -> Unit,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    onCollectionClick: (String) -> Unit
 ) {
     Scaffold(
         topBar = { HomeTopBar() },
@@ -42,7 +44,7 @@ private fun HomeScreen(
                         .padding(innerPadding),
                 ) {
                     items(homeViewState.rows.size) { index ->
-                        CollectionRow(homeViewState.rows[index], onProductClick)
+                        CollectionRow(homeViewState.rows[index], onProductClick, onCollectionClick)
                     }
                 }
             HomeScreenViewState.Empty -> LazyColumn(

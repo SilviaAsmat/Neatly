@@ -10,6 +10,7 @@ interface Repository {
     suspend fun getCollections(): List<CollectionInfo>
     suspend fun getProductsWithCollection(productId: Int): List<CollectionInfo>
     suspend fun getCollectionsWithProducts(): Flow<List<CollectionWithProducts>>
+    suspend fun getCollectionByName(collectionName: String): CollectionInfo
 }
 
 data class CollectionWithProducts(

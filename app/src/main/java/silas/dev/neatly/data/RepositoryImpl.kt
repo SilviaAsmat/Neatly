@@ -73,7 +73,7 @@ class RepositoryImpl @Inject constructor(
         }
         return mapped
     }
-    
+
     override suspend fun getCollectionsWithProducts(): Flow<List<CollectionWithProducts>> =
         database.collectionsDao().getAllCollectionsFlow().map { collectionEntities ->
             val mapped = collectionEntities.map { collectionEntity ->
@@ -98,9 +98,16 @@ class RepositoryImpl @Inject constructor(
                 )
             }
             mapped
-
         }.flowOn(Dispatchers.IO)
 
+    override suspend fun getCollectionByName(collectionName: String): CollectionInfo{
+        val collectionEntity = database.collectionsDao().getCollectionByName(collectionName)
+        return CollectionInfo(
+            collectionId = collectionEntity.collectionId,
+            name = collectionEntity.name,
+            description = collectionEntity.description
+        )
+    }
 
     //TODO: Add Delete product/collection
 }
