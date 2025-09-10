@@ -14,24 +14,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
+import silas.dev.neatly.ui.MainNavHost
 import silas.dev.neatly.ui.home.HomeScreen
 import silas.dev.neatly.ui.home.HomeScreenViewModel
 import silas.dev.neatly.ui.theme.NeatlyTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             NeatlyTheme {
-                val viewModel: HomeScreenViewModel = hiltViewModel()
-
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeScreen(
-                        viewModel = viewModel
+                    val navController = rememberNavController()
+                    MainNavHost(
+                        navController = navController
                     )
                 }
             }
