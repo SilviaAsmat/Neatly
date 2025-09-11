@@ -17,7 +17,7 @@ import silas.dev.neatly.ui.products.ProductInfoViewState
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
-    onProductClick: (ProductInfoViewState) -> Unit,
+    onProductClick: (Int) -> Unit,
     onCollectionClick: (String) -> Unit
 ) {
     val viewState by viewModel.homeScreenViewState.collectAsState()
@@ -28,7 +28,7 @@ fun HomeScreen(
 @Composable
 private fun HomeScreen(
     homeViewState: HomeScreenViewState,
-    onProductClick: (ProductInfoViewState) -> Unit,
+    onProductClick: (Int) -> Unit,
     onValueChange: (String) -> Unit,
     onCollectionClick: (String) -> Unit
 ) {

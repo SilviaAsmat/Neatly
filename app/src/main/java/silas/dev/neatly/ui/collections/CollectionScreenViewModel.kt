@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import silas.dev.neatly.domain.ProductInfo
 import silas.dev.neatly.domain.Repository
 import silas.dev.neatly.ui.products.ProductInfoViewState
 import javax.inject.Inject

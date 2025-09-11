@@ -8,7 +8,7 @@ class CollectionScreenViewState (
     val products: List<ProductInfoViewState>,
     val collectionName: String
 ){
-    companion object Companion {
+    companion object {
         val NONE = CollectionScreenViewState(
         products = emptyList(),
         collectionName = ""

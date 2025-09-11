@@ -22,13 +22,13 @@ import silas.dev.neatly.ui.products.ProductInfoViewState
 @Composable
 fun ProductCard(
     productInfo: ProductInfoViewState,
-    onProductClick: (ProductInfoViewState) -> Unit,
+    onProductClick: (Int) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .padding(8.dp)
             .background(Color.White)
-            .clickable { onProductClick(productInfo) }
+            .clickable { onProductClick(productInfo.id) }
     )
     {
         Box(

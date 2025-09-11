@@ -7,9 +7,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 
 @Composable
-fun AddProductButton(onClick: () -> Unit) {
+fun AddProductButton(onProductClick: () -> Unit) {
     FloatingActionButton(
-        onClick = { onClick() },
+        onClick = { onProductClick() },
     ) {
         Icon(Icons.Filled.Add, "Floating action button.")
     }

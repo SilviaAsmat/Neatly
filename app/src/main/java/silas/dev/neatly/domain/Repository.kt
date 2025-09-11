@@ -11,6 +11,7 @@ interface Repository {
     suspend fun getProductsWithCollection(productId: Int): List<CollectionInfo>
     suspend fun getCollectionsWithProducts(): Flow<List<CollectionWithProducts>>
     suspend fun getCollectionByName(collectionName: String): CollectionInfo
+    suspend fun getProduct(productId: Int): ProductInfo
 }
 
 data class CollectionWithProducts(

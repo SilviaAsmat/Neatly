@@ -12,6 +12,7 @@ import silas.dev.neatly.ui.collections.CollectionScreen
 import silas.dev.neatly.ui.collections.CollectionScreenViewModel
 import silas.dev.neatly.ui.home.HomeScreen
 import silas.dev.neatly.ui.home.HomeScreenViewModel
+import silas.dev.neatly.ui.products.ProductInfoViewState
 import silas.dev.neatly.ui.products.ProductScreen
 import silas.dev.neatly.ui.products.ProductScreenViewModel
 
@@ -19,7 +20,7 @@ import silas.dev.neatly.ui.products.ProductScreenViewModel
 object MainScreen
 
 @Serializable
-data class ProductScreen(val productId: Int)
+data class ProductScreen(val id: Int)
 
 @Serializable
 data class CollectionScreen(val collectionName: String)
@@ -38,29 +39,34 @@ fun MainNavHost(
             val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
             HomeScreen(
                 viewModel = homeScreenViewModel,
-                onProductClick = { productInfoViewState ->
-                    navController.navigate(route = ProductScreen(productId = productInfoViewState.id))
+                onProductClick = { id ->
+                    navController.navigate(route = ProductScreen(id = id))
                 },
                 onCollectionClick = { collectionName ->
                     navController.navigate(route = CollectionScreen(collectionName))
                 }
             )
         }
-        composable<ProductScreen> {
-            val productScreenViewModel: ProductScreenViewModel = hiltViewModel()
-            ProductScreen(
-                viewModel = productScreenViewModel
-            )
-        }
-
-        composable<CollectionScreen> {backStackEntry ->
+        composable<CollectionScreen> { backStackEntry ->
             val name = backStackEntry.arguments?.getString("collectionName")
             val collectionScreenViewModel: CollectionScreenViewModel = hiltViewModel()
             collectionScreenViewModel.initWithName(name!!)
             CollectionScreen(
-                viewModel = collectionScreenViewModel
+                viewModel = collectionScreenViewModel,
+                onProductClick = {id ->
+                    navController.navigate(route = ProductScreen(id))
+                },
+                onAddProductClick = {
+                    navController.navigate(route = ProductScreen(-1))
+                },
+            )
+        }
+        composable<ProductScreen> { backStackEntry ->
+            val productScreenViewModel: ProductScreenViewModel = hiltViewModel()
+            productScreenViewModel.initWithId(id)
+            ProductScreen(
+                viewModel = productScreenViewModel
             )
         }
     }
-
 }

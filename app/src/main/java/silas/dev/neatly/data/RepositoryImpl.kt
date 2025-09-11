@@ -108,6 +108,16 @@ class RepositoryImpl @Inject constructor(
             description = collectionEntity.description
         )
     }
+    override suspend fun getProduct(productId: Int): ProductInfo {
+        val productEntity = database.productInfoDao().getProduct(productId)
+        return ProductInfo(
+            name = productEntity.name,
+            description = productEntity.description,
+            upcCode = productEntity.upcCode,
+            id = productEntity.productId
+        )
+    }
+
 
     //TODO: Add Delete product/collection
 }

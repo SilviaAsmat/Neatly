@@ -15,7 +15,7 @@ import silas.dev.neatly.ui.products.ProductInfoViewState
 @Composable
 fun RowOfProducts(
     products: List<ProductInfoViewState>,
-    onProductClick: (ProductInfoViewState) -> Unit,
+    onProductClick: (Int) -> Unit,
 ){
     LazyRow(
         modifier = Modifier

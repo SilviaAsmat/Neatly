@@ -8,7 +8,7 @@ import silas.dev.neatly.ui.products.ProductInfoViewState
 @Composable
 fun CollectionRow(
     collectionRowViewState: CollectionRowViewState,
-    onProductClick: (ProductInfoViewState) -> Unit,
+    onProductClick: (Int) -> Unit,
     onCollectionClick: (String) -> Unit
 ) {
 //    Column {

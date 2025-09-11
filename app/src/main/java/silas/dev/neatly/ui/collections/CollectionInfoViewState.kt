@@ -8,7 +8,7 @@ class CollectionInfoViewState(
     val name: String,
     val description: String
 ) {
-    companion object Companion {
+    companion object {
         val NONE = CollectionInfoViewState(
             id = 0,
             name = "",

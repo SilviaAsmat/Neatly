@@ -3,16 +3,16 @@ package silas.dev.neatly.ui.products
 import androidx.compose.runtime.Immutable
 
 @Immutable
-class ProductInfoViewState(
+data class ProductInfoViewState(
     val id: Int,
     val name: String,
     val description: String
 ) {
-    companion object Companion {
+    companion object {
         val NONE = ProductInfoViewState(
-            id = 0,
-            name = "",
-            description = ""
+            id = -1,
+            name = "Add Product Name",
+            description = "Add Description"
         )
     }
 }
