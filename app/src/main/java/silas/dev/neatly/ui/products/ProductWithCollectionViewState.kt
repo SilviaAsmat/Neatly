@@ -1,4 +1,10 @@
 package silas.dev.neatly.ui.products
 
-class ProductWithCollection {
+import androidx.compose.runtime.Immutable
+
+@Immutable
+class ProductWithCollectionViewState(
+    val productId: Int,
+    val collectionId: Int,
+) {
 }

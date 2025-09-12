@@ -61,9 +61,10 @@ fun MainNavHost(
                 },
             )
         }
-        composable<ProductScreen> { backStackEntry ->
+        composable<ProductScreenDestination> { backStackEntry ->
+            val productDetails: ProductScreenDestination = backStackEntry.toRoute()
             val productScreenViewModel: ProductScreenViewModel = hiltViewModel()
-            productScreenViewModel.initWithId(id)
+            productScreenViewModel.initWithId(productDetails.productId)
             ProductScreen(
                 viewModel = productScreenViewModel
             )

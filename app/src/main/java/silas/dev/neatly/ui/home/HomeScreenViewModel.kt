@@ -1,5 +1,6 @@
 package silas.dev.neatly.ui.home
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    private val repo: Repository
+    private val repo: Repository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _homeScreenViewState =
         MutableStateFlow<HomeScreenViewState>(HomeScreenViewState.Loading)

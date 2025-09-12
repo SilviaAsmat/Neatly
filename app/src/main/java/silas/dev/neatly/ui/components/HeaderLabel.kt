@@ -11,12 +11,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HeaderLabel(name: String, onCollectionClick: (String) -> Unit) {
+fun HeaderLabel(name: String, onCollectionClick: () -> Unit) {
     Text(
-        text = name,
+        text = name,// TODO validate collection name in user input and db
         modifier = Modifier
             .padding(top = 0.dp, bottom = 6.dp, start = 16.dp)
-            .clickable {onCollectionClick(name)}, // TODO validate collection name in user input and db
+            .clickable {onCollectionClick()},
         color = Color.Black,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp,

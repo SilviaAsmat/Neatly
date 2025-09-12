@@ -9,16 +9,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import silas.dev.neatly.ui.collections.CollectionInfoViewState
 import silas.dev.neatly.ui.components.CollectionRow
-import silas.dev.neatly.ui.components.HomeButton
+import silas.dev.neatly.ui.components.AddCollectionButton
 import silas.dev.neatly.ui.components.HomeTopBar
-import silas.dev.neatly.ui.products.ProductInfoViewState
+import silas.dev.neatly.ui.products.ProductWithCollectionViewState
 
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
-    onProductClick: (Int) -> Unit,
-    onCollectionClick: (String) -> Unit
+    onProductClick: (ProductWithCollectionViewState) -> Unit,
+    onCollectionClick: (CollectionInfoViewState) -> Unit
 ) {
     val viewState by viewModel.homeScreenViewState.collectAsState()
     HomeScreen(viewState, onProductClick, viewModel::onAddCollection, onCollectionClick)
@@ -28,13 +29,13 @@ fun HomeScreen(
 @Composable
 private fun HomeScreen(
     homeViewState: HomeScreenViewState,
-    onProductClick: (Int) -> Unit,
+    onProductClick: (ProductWithCollectionViewState) -> Unit,
     onValueChange: (String) -> Unit,
-    onCollectionClick: (String) -> Unit
+    onCollectionClick: (CollectionInfoViewState) -> Unit
 ) {
     Scaffold(
         topBar = { HomeTopBar() },
-        floatingActionButton = {HomeButton(onValueChange)}
+        floatingActionButton = {AddCollectionButton(onValueChange)}
     ) { innerPadding ->
         when (homeViewState) {
             is HomeScreenViewState.Data ->

@@ -4,18 +4,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import silas.dev.neatly.ui.products.ProductInfoViewState
+import silas.dev.neatly.ui.products.ProductWithCollectionViewState
 
 @Composable
 fun RowOfProducts(
     products: List<ProductInfoViewState>,
-    onProductClick: (Int) -> Unit,
+    onProductClick: (ProductWithCollectionViewState) -> Unit,
+    collectionId: Int
 ){
     LazyRow(
         modifier = Modifier
@@ -26,7 +25,7 @@ fun RowOfProducts(
         items(count = products.size) { index ->
             ProductCard(
                 productInfo = products[index],
-                onProductClick = onProductClick,
+                onProductClick = { onProductClick(ProductWithCollectionViewState(products[index].id, collectionId)) },
             )
         }
     }

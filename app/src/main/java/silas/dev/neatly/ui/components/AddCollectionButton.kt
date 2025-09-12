@@ -20,7 +20,7 @@ import androidx.compose.runtime.setValue
 
 @ExperimentalMaterial3ExpressiveApi
 @Composable
-fun HomeButton(onValueChange: (String) -> Unit) {
+fun AddCollectionButton(onValueChange: (String) -> Unit) {
     var showDialog by remember { mutableStateOf(false) }
     FloatingActionButton(
         onClick = { showDialog = true },

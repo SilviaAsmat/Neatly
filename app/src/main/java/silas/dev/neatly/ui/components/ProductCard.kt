@@ -31,24 +31,25 @@ fun ProductCard(
             .clickable { onProductClick(productInfo.id) }
     )
     {
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-                .background(Color.Gray)
-                .height(150.dp)
-                .width(150.dp)
-        ) {
-            // TODO: Add image here, might not need Box, also image might not exist
-        }
+
         Column(
             modifier = Modifier
-                .padding(8.dp, 8.dp)
+                .padding(12.dp)
                 .background(Color.White)
                 .width(140.dp)
-        ) {
+        )
+        {
+            Box(
+                modifier = Modifier
+                    .background(Color.Gray)
+                    .height(150.dp)
+                    .width(150.dp)
+            ) {
+                // TODO: Add image here, might not need Box, also image might not exist
+            }
             Text(
                 text = productInfo.name,
-                modifier = Modifier.padding(0.dp),
+                modifier = Modifier.padding(0.dp, 8.dp),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
