@@ -1,5 +1,6 @@
 package silas.dev.neatly.ui.collections
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,12 +22,13 @@ class CollectionScreenViewModel @Inject constructor(
     val collectionsScreenViewState =
         _collectionsScreenViewState as StateFlow<CollectionScreenViewState>
 
-    fun initWithName (collectionName: String) {
+    fun initWithId(collectionId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val data = repo.getCollectionByName(collectionName)
+            val data = repo.getCollectionById(collectionId)
             val products = repo.getCollectionWithProducts(data.collectionId)
             val newState = CollectionScreenViewState(
                 collectionName = data.name,
+                collectionId = data.collectionId,
                 products = products.map { product ->
                     ProductInfoViewState(
                         product.id,

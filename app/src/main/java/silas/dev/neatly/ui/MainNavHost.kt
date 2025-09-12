@@ -4,15 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 import silas.dev.neatly.ui.collections.CollectionScreen
 import silas.dev.neatly.ui.collections.CollectionScreenViewModel
 import silas.dev.neatly.ui.home.HomeScreen
 import silas.dev.neatly.ui.home.HomeScreenViewModel
-import silas.dev.neatly.ui.products.ProductInfoViewState
 import silas.dev.neatly.ui.products.ProductScreen
 import silas.dev.neatly.ui.products.ProductScreenViewModel
 
@@ -20,10 +19,10 @@ import silas.dev.neatly.ui.products.ProductScreenViewModel
 object MainScreen
 
 @Serializable
-data class ProductScreen(val id: Int)
+data class ProductScreenDestination(val productId: Int, val collectionId: Int)
 
 @Serializable
-data class CollectionScreen(val collectionName: String)
+data class CollectionScreen(val id: Int)
 
 @Composable
 fun MainNavHost(
@@ -39,25 +38,36 @@ fun MainNavHost(
             val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
             HomeScreen(
                 viewModel = homeScreenViewModel,
-                onProductClick = { id ->
-                    navController.navigate(route = ProductScreen(id = id))
+                onProductClick = { productWithCollectionViewState ->
+                    navController.navigate(
+                        route = ProductScreenDestination(
+                            productId = productWithCollectionViewState.productId,
+                            collectionId = productWithCollectionViewState.collectionId
+                        )
+                    )
                 },
-                onCollectionClick = { collectionName ->
-                    navController.navigate(route = CollectionScreen(collectionName))
+                onCollectionClick = { collectionInfoViewState ->
+                    navController.navigate(route = CollectionScreen(id = collectionInfoViewState.id))
                 }
             )
         }
         composable<CollectionScreen> { backStackEntry ->
-            val name = backStackEntry.arguments?.getString("collectionName")
+            val collectionDetails: CollectionScreen = backStackEntry.toRoute()
             val collectionScreenViewModel: CollectionScreenViewModel = hiltViewModel()
-            collectionScreenViewModel.initWithName(name!!)
+            collectionScreenViewModel.initWithId(collectionDetails.id)
             CollectionScreen(
                 viewModel = collectionScreenViewModel,
-                onProductClick = {id ->
-                    navController.navigate(route = ProductScreen(id))
+                onProductClick = { productWithCollectionViewState ->
+                    navController.navigate(route = ProductScreenDestination(
+                        productId = productWithCollectionViewState.productId,
+                        collectionId = productWithCollectionViewState.collectionId
+                    ))
                 },
-                onAddProductClick = {
-                    navController.navigate(route = ProductScreen(-1))
+                onAddProductClick = { productWithCollectionViewState ->
+                    navController.navigate(route = ProductScreenDestination(
+                        productId = productWithCollectionViewState.productId,
+                        collectionId = productWithCollectionViewState.collectionId
+                    ))
                 },
             )
         }
