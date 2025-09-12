@@ -15,7 +15,7 @@ fun HeaderLabel(name: String, onCollectionClick: () -> Unit) {
     Text(
         text = name,// TODO validate collection name in user input and db
         modifier = Modifier
-            .padding(top = 0.dp, bottom = 6.dp, start = 16.dp)
+            .padding(top = 6.dp, bottom = 6.dp, start = 16.dp)
             .clickable {onCollectionClick()},
         color = Color.Black,
         fontWeight = FontWeight.SemiBold,

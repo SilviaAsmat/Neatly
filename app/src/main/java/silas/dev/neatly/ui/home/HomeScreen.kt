@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,7 +36,8 @@ private fun HomeScreen(
 ) {
     Scaffold(
         topBar = { HomeTopBar() },
-        floatingActionButton = {AddCollectionButton(onValueChange)}
+        floatingActionButton = {AddCollectionButton(onValueChange)},
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         when (homeViewState) {
             is HomeScreenViewState.Data ->

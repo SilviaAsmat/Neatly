@@ -8,5 +8,5 @@ import androidx.compose.runtime.Composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar() {
-    CenterAlignedTopAppBar(title = { Text(text = "Neatly Collections") })
+    CenterAlignedTopAppBar(title = { Text(text = "Collections") })
 }
