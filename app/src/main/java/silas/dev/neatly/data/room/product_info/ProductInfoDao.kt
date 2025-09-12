@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface ProductInfoDao {
     @Insert(onConflict = 1)
-    fun insertProduct(product: ProductInfoEntity)
+    fun insertProduct(product: ProductInfoEntity): Long
     @Delete
     fun deleteProduct(product: ProductInfoEntity)
     @Query("SELECT * FROM product_info WHERE productId = :id")

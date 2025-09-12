@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import silas.dev.neatly.data.room.NeatlyDatabase
 import silas.dev.neatly.data.room.collection.CollectionsEntity
+import silas.dev.neatly.data.room.lookup.CollectionProductsCrossRef
 import silas.dev.neatly.data.room.product_info.ProductInfoEntity
 import silas.dev.neatly.domain.CollectionInfo
 import silas.dev.neatly.domain.CollectionWithProducts
@@ -16,19 +17,24 @@ import javax.inject.Inject
 class RepositoryImpl @Inject constructor(
     private val database: NeatlyDatabase
 ) : Repository {
-    override suspend fun addProduct(product: ProductInfo) {
+    override suspend fun addProduct(product: ProductInfo): Long {
+        val entityId = if (product.id > 0) {
+            product.id
+        } else {
+            0
+        }
         val productEntity = ProductInfoEntity(
-            productId = 0,
+            productId = entityId,
             name = product.name,
             description = product.description,
             upcCode = product.upcCode
         )
-        database.productInfoDao().insertProduct(productEntity)
+        return database.productInfoDao().insertProduct(productEntity)
     }
 
     override suspend fun addCollection(collection: CollectionInfo) {
         val collectionEntity = CollectionsEntity(
-            collectionId = 0,
+            collectionId = collection.collectionId,
             name = collection.name,
             description = collection.description
         )
@@ -100,7 +106,7 @@ class RepositoryImpl @Inject constructor(
             mapped
         }.flowOn(Dispatchers.IO)
 
-    override suspend fun getCollectionByName(collectionName: String): CollectionInfo{
+    override suspend fun getCollectionByName(collectionName: String): CollectionInfo {
         val collectionEntity = database.collectionsDao().getCollectionByName(collectionName)
         return CollectionInfo(
             collectionId = collectionEntity.collectionId,
@@ -108,6 +114,7 @@ class RepositoryImpl @Inject constructor(
             description = collectionEntity.description
         )
     }
+
     override suspend fun getProduct(productId: Int): ProductInfo {
         val productEntity = database.productInfoDao().getProduct(productId)
         return ProductInfo(
@@ -115,6 +122,23 @@ class RepositoryImpl @Inject constructor(
             description = productEntity.description,
             upcCode = productEntity.upcCode,
             id = productEntity.productId
+        )
+    }
+
+    override suspend fun addProductCollectionCrossRef(productId: Int, collectionId: Int) {
+        val crossRef = CollectionProductsCrossRef(
+            productId = productId,
+            collectionId = collectionId
+        )
+        database.collectionProductsCrossRefDao().addProductCollectionCrossRef(crossRef)
+    }
+
+    override suspend fun getCollectionById(collectionId: Int): CollectionInfo {
+        val collectionEntity = database.collectionsDao().getCollectionById(collectionId)
+        return CollectionInfo(
+            collectionId = collectionEntity.collectionId,
+            name = collectionEntity.name,
+            description = collectionEntity.description
         )
     }
 
