@@ -55,6 +55,7 @@ private fun ProductScreen(
         )
     }
     ) { innerPadding ->
+        // TODO fix text state and save/deletion for different fields
         Column(modifier = Modifier.padding(innerPadding)) {
             Text(
                 text = "Product Info",

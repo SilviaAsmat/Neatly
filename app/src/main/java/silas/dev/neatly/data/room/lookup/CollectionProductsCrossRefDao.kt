@@ -6,12 +6,17 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CollectionProductsCrossRefDao {
     @Transaction
     @Query("SELECT * FROM collections WHERE collectionId = :collectionId")
-    suspend fun getCollectionWithProducts(collectionId: Int): CollectionWithProducts
+     fun getCollectionWithProductsFlow(collectionId: Int): Flow<CollectionWithProducts>
+
+    @Transaction
+    @Query("SELECT * FROM collections")
+     fun getAllCollectionsWithProductsFlow(): Flow<List<CollectionWithProducts>>
 
     @Transaction
     @Query("SELECT * FROM product_info WHERE productId = :productId")

@@ -7,6 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import silas.dev.neatly.domain.CollectionInfo
 import silas.dev.neatly.domain.CrossRefInfo
@@ -31,27 +33,33 @@ class CollectionScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val collectionId = savedStateHandle.get<Int>("collectionId")
             val data = repo.getCollectionById(collectionId!!)
-            val products = repo.getCollectionWithProducts(data.collectionId)
-            val newState = CollectionScreenViewState(
-                collectionName = data.name,
-                collectionId = data.collectionId,
-                products = products.map { product ->
-                    ProductInfoViewState(
-                        product.id,
-                        product.name,
-                        description = product.description
+
+            repo.getCollectionWithProducts(data.collectionId)
+                .map { productList ->
+                    CollectionScreenViewState(
+                        collectionName = data.name,
+                        collectionId = data.collectionId,
+                        products = productList.map { product ->
+                            ProductInfoViewState(
+                                name = product.name,
+                                description = product.description,
+                                id = product.id
+                            )
+                        }
                     )
                 }
-            )
-            _collectionsScreenViewState.emit(newState)
+                .collect { newState ->
+                    _collectionsScreenViewState.emit(newState)
+                }
         }
     }
 
-    fun onDeleteIconClicked(){
+    fun onDeleteIconClicked() {
         // call dialog to confirm delete
         _showDeleteDialog.value = true
 
     }
+
     fun onDismissDelete() {
         _showDeleteDialog.value = false
     }
@@ -61,11 +69,13 @@ class CollectionScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val collectionId = savedStateHandle.get<Int>("collectionId")
             val collection = repo.getCollectionById(collectionId!!)
-            val products = repo.getCollectionWithProducts(collection.collectionId)
             repo.deleteCollection(collection)
-            products.forEach { product ->
-                repo.deleteProductCollectionCrossRef(CrossRefInfo(product.id, collectionId))
-                repo.deleteProduct(product)
+            val productFlow = repo.getCollectionWithProducts(collection.collectionId)
+            productFlow.map { products ->
+                products.forEach { product ->
+                    repo.deleteProductCollectionCrossRef(CrossRefInfo(product.id, collectionId))
+                    repo.deleteProduct(product)
+                }
             }
 
         }

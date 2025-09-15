@@ -27,7 +27,7 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.getCollectionsWithProducts().collect { collectionsWithProducts ->
+            repo.getAllCollectionsWithProductsFlow().collect { collectionsWithProducts ->
                 val rows = collectionsWithProducts.map { collectionWithProducts ->
                     CollectionRowViewState(
                         collection = CollectionInfoViewState(

@@ -42,20 +42,6 @@ class RepositoryImpl @Inject constructor(
         database.collectionsDao().insertCollection(collectionEntity)
     }
 
-    override suspend fun getCollectionWithProducts(collectionId: Int): List<ProductInfo> {
-        val products = database.collectionProductsCrossRefDao()
-            .getCollectionWithProducts(collectionId).products
-        val mapped = products.map { productEntity ->
-            ProductInfo(
-                name = productEntity.name,
-                description = productEntity.description,
-                upcCode = productEntity.upcCode,
-                id = productEntity.productId
-            )
-        }
-        return mapped
-    }
-
     override suspend fun getCollections(): List<CollectionInfo> { // TODO: Convert to Flow
         val collections = database.collectionsDao().getAllCollections()
         val mapped = collections.map { collectionEntity ->
@@ -80,32 +66,6 @@ class RepositoryImpl @Inject constructor(
         }
         return mapped
     }
-
-    override suspend fun getCollectionsWithProducts(): Flow<List<CollectionWithProducts>> =
-        database.collectionsDao().getAllCollectionsFlow().map { collectionEntities ->
-            val mapped = collectionEntities.map { collectionEntity ->
-                val products = database
-                    .collectionProductsCrossRefDao()
-                    .getCollectionWithProducts(collectionEntity.collectionId)
-                // Map from entity to domain model
-                CollectionWithProducts(
-                    collection = CollectionInfo(
-                        collectionId = collectionEntity.collectionId,
-                        name = collectionEntity.name,
-                        description = collectionEntity.description
-                    ),
-                    products = products.products.map { productEntity ->
-                        ProductInfo(
-                            name = productEntity.name,
-                            description = productEntity.description,
-                            upcCode = productEntity.upcCode,
-                            id = productEntity.productId
-                        )
-                    }
-                )
-            }
-            mapped
-        }.flowOn(Dispatchers.IO)
 
     override suspend fun getCollectionByName(collectionName: String): CollectionInfo {
         val collectionEntity = database.collectionsDao().getCollectionByName(collectionName)
@@ -169,8 +129,49 @@ class RepositoryImpl @Inject constructor(
             productId = crossRef.productId,
             collectionId = crossRef.collectionId
         )
-        database.collectionProductsCrossRefDao().deleteProductCollectionCrossRef(crossRefEntity)
+        database.collectionProductsCrossRefDao()
+            .deleteProductCollectionCrossRef(crossRefEntity)
     }
 
+    override suspend fun getCollectionWithProducts(collectionId: Int): Flow<List<ProductInfo>> =
+        database.collectionProductsCrossRefDao()
+            .getCollectionWithProductsFlow(collectionId)
+            .map { collectionWithProducts -> // 'it' is the emitted CollectionWithProducts object
+                collectionWithProducts.products.map { productEntity ->
+                    // This inner map converts each ProductEntity to a ProductInfo
+                    ProductInfo(
+                        name = productEntity.name,
+                        description = productEntity.description,
+                        upcCode = productEntity.upcCode,
+                        id = productEntity.productId
+                    )
+                }
+            }
+            .flowOn(Dispatchers.IO)
+
+
+    override suspend fun getAllCollectionsWithProductsFlow(): Flow<List<CollectionWithProducts>> =
+        database.collectionProductsCrossRefDao()
+            .getAllCollectionsWithProductsFlow()
+            .map { listOfCollectionsWithProducts ->
+                listOfCollectionsWithProducts.map { entity ->
+                    CollectionWithProducts(
+                        collection = CollectionInfo(
+                            collectionId = entity.collection.collectionId,
+                            name = entity.collection.name,
+                            description = entity.collection.description
+                        ),
+                        products = entity.products.map { productEntity ->
+                            ProductInfo(
+                                id = productEntity.productId,
+                                name = productEntity.name,
+                                description = productEntity.description,
+                                upcCode = productEntity.upcCode
+                            )
+                        }
+                    )
+                }
+            }
+            .flowOn(Dispatchers.IO)
 }
 
