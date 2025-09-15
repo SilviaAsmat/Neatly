@@ -1,6 +1,7 @@
 package silas.dev.neatly.data.room.lookup
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -18,4 +19,8 @@ interface CollectionProductsCrossRefDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addProductCollectionCrossRef(crossRef: CollectionProductsCrossRef)
+
+    @Delete()
+    suspend fun deleteProductCollectionCrossRef(crossRef: CollectionProductsCrossRef)
+
 }

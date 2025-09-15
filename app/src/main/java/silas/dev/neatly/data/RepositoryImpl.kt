@@ -10,6 +10,7 @@ import silas.dev.neatly.data.room.lookup.CollectionProductsCrossRef
 import silas.dev.neatly.data.room.product_info.ProductInfoEntity
 import silas.dev.neatly.domain.CollectionInfo
 import silas.dev.neatly.domain.CollectionWithProducts
+import silas.dev.neatly.domain.CrossRefInfo
 import silas.dev.neatly.domain.ProductInfo
 import silas.dev.neatly.domain.Repository
 import javax.inject.Inject
@@ -55,7 +56,7 @@ class RepositoryImpl @Inject constructor(
         return mapped
     }
 
-    override suspend fun getCollections(): List<CollectionInfo> {
+    override suspend fun getCollections(): List<CollectionInfo> { // TODO: Convert to Flow
         val collections = database.collectionsDao().getAllCollections()
         val mapped = collections.map { collectionEntity ->
             CollectionInfo(
@@ -67,7 +68,7 @@ class RepositoryImpl @Inject constructor(
         return mapped
     }
 
-    override suspend fun getProductsWithCollection(productId: Int): List<CollectionInfo> {
+    override suspend fun getProductsWithCollection(productId: Int): List<CollectionInfo> { // TODO: Convert to Flow
         val collections = database.collectionProductsCrossRefDao()
             .getProductsWithCollection(productId).collections
         val mapped = collections.map { collectionEntity ->
@@ -144,4 +145,32 @@ class RepositoryImpl @Inject constructor(
 
 
     //TODO: Add Delete product/collection
+    override suspend fun deleteProduct(product: ProductInfo) {
+        val productEntity = ProductInfoEntity(
+            productId = product.id,
+            name = product.name,
+            description = product.description,
+            upcCode = product.upcCode
+        )
+        database.productInfoDao().deleteProduct(productEntity)
+    }
+
+    override suspend fun deleteCollection(collection: CollectionInfo) {
+        val collectionEntity = CollectionsEntity(
+            collectionId = collection.collectionId,
+            name = collection.name,
+            description = collection.description
+        )
+        database.collectionsDao().deleteCollection(collectionEntity)
+    }
+
+    override suspend fun deleteProductCollectionCrossRef(crossRef: CrossRefInfo) {
+        val crossRefEntity = CollectionProductsCrossRef(
+            productId = crossRef.productId,
+            collectionId = crossRef.collectionId
+        )
+        database.collectionProductsCrossRefDao().deleteProductCollectionCrossRef(crossRefEntity)
+    }
+
 }
+

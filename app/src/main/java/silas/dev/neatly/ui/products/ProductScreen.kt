@@ -82,7 +82,7 @@ private fun ProductScreen(
                     focusedIndicatorColor = MaterialTheme.colorScheme.primary,  // Border color when focused
                     unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.secondaryContainer
+                    unfocusedLabelColor = MaterialTheme.colorScheme.secondary
                 ),
                 lineLimits = TextFieldLineLimits.SingleLine,
                 state = nameState,

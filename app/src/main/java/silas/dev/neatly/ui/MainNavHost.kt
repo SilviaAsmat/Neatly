@@ -22,7 +22,7 @@ object MainScreen
 data class ProductScreenDestination(val productId: Int, val collectionId: Int)
 
 @Serializable
-data class CollectionScreen(val id: Int)
+data class CollectionScreen(val collectionId: Int)
 
 @Composable
 fun MainNavHost(
@@ -47,14 +47,12 @@ fun MainNavHost(
                     )
                 },
                 onCollectionClick = { collectionInfoViewState ->
-                    navController.navigate(route = CollectionScreen(id = collectionInfoViewState.id))
+                    navController.navigate(route = CollectionScreen( collectionInfoViewState.id))
                 }
             )
         }
         composable<CollectionScreen> { backStackEntry ->
-            val collectionDetails: CollectionScreen = backStackEntry.toRoute()
             val collectionScreenViewModel: CollectionScreenViewModel = hiltViewModel()
-            collectionScreenViewModel.initWithId(collectionDetails.id)
             CollectionScreen(
                 viewModel = collectionScreenViewModel,
                 onProductClick = { productWithCollectionViewState ->

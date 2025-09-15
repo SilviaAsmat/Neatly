@@ -62,5 +62,4 @@ class HomeScreenViewModel @Inject constructor(
             repo.addCollection(collection)
         }
     }
-
 }

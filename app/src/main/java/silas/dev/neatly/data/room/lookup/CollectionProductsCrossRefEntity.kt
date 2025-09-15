@@ -1,6 +1,5 @@
 package silas.dev.neatly.data.room.lookup
 
-import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Junction

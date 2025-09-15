@@ -7,7 +7,7 @@ import silas.dev.neatly.data.room.lookup.CollectionProductsCrossRef
 interface Repository {
     suspend fun addProduct(product: ProductInfo): Long
     suspend fun addCollection(collection: CollectionInfo)
-    suspend fun getCollectionWithProducts(collectionId: Int): List<ProductInfo>
+    suspend fun getCollectionWithProducts(collectionId: Int): List<ProductInfo>// TODO: Convert to Flow
     suspend fun getCollections(): List<CollectionInfo>
     suspend fun getProductsWithCollection(productId: Int): List<CollectionInfo>
     suspend fun getCollectionsWithProducts(): Flow<List<CollectionWithProducts>>
@@ -15,6 +15,9 @@ interface Repository {
     suspend fun getProduct(productId: Int): ProductInfo
     suspend fun addProductCollectionCrossRef(productId: Int, collectionId: Int)
     suspend fun getCollectionById(collectionId: Int): CollectionInfo
+    suspend fun deleteProduct(product: ProductInfo)
+    suspend fun deleteCollection(collection: CollectionInfo)
+    suspend fun deleteProductCollectionCrossRef(crossRef: CrossRefInfo)
 }
 
 data class CollectionWithProducts(

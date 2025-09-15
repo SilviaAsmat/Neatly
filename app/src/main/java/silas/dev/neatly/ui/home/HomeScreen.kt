@@ -11,8 +11,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import silas.dev.neatly.ui.collections.CollectionInfoViewState
-import silas.dev.neatly.ui.components.CollectionRow
 import silas.dev.neatly.ui.components.AddCollectionButton
+import silas.dev.neatly.ui.components.CollectionRow
 import silas.dev.neatly.ui.components.HomeTopBar
 import silas.dev.neatly.ui.products.ProductWithCollectionViewState
 

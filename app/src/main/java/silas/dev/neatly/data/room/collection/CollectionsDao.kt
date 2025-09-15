@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.Flow
 interface CollectionsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCollection(collection: CollectionsEntity)
-    @Delete
+    @Delete()
     fun deleteCollection(collection: CollectionsEntity)
-    @Query("SELECT * FROM collections")
+    @Query("SELECT * FROM collections ")
     fun getAllCollections(): List<CollectionsEntity>
     @Query("SELECT * FROM collections")
     fun getAllCollectionsFlow(): Flow<List<CollectionsEntity>>
@@ -21,5 +21,7 @@ interface CollectionsDao {
     fun getCollectionByName(name: String): CollectionsEntity
     @Query("SELECT * FROM collections WHERE collectionId = :id")
     fun getCollectionById(id: Int): CollectionsEntity
+
+
 
 }
