@@ -9,7 +9,6 @@ interface Repository {
     suspend fun getCollectionWithProductsFlow(collectionId: Int): Flow<List<ProductInfo>>
     suspend fun getCollections(): List<CollectionInfo>
     suspend fun getProductsWithCollection(productId: Int): List<CollectionInfo>
-//    suspend fun getCollectionWithProducts(collectionId: Int): List<CollectionWithProducts>
     suspend fun getCollectionByName(collectionName: String): CollectionInfo
     suspend fun getProduct(productId: Int): ProductInfo
     suspend fun addProductCollectionCrossRef(productId: Int, collectionId: Int)

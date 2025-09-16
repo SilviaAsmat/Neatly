@@ -47,16 +47,19 @@ class ProductScreenViewModel @Inject constructor(
     }
 
     fun saveProduct() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val data = ProductInfo(
-                id = id,
-                name = nameLabel.text.toString(),
-                description = descriptionLabel.text.toString(),
-                upcCode = ""
-            )
-            val newID = repo.addProduct(data)
-            val collectionId = savedStateHandle.get<Int>("collectionId")
-            repo.addProductCollectionCrossRef(newID.toInt(), collectionId = collectionId!!)
+        if (id != 0) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val data = ProductInfo(
+                    id = id,
+                    name = nameLabel.text.toString(),
+                    description = descriptionLabel.text.toString(),
+                    upcCode = ""
+                )
+                id = repo.addProduct(data).toInt()
+                val collectionId = savedStateHandle.get<Int>("collectionId")
+                repo.addProductCollectionCrossRef(id, collectionId = collectionId!!)
+            }
         }
+
     }
 }

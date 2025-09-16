@@ -188,23 +188,5 @@ class RepositoryImpl @Inject constructor(
             )
         }
     }
-
-//    override suspend fun getCollectionWithProducts(collectionId: Int): List<ProductInfo> {
-//        database.collectionProductsCrossRefDao()
-//            .getCollectionWithProductsFlow(collectionId)
-//            .map { collectionWithProducts -> // 'it' is the emitted CollectionWithProducts object
-//                collectionWithProducts.products.map { productEntity ->
-//                    // This inner map converts each ProductEntity to a ProductInfo
-//                    ProductInfo(
-//                        name = productEntity.name,
-//                        description = productEntity.description,
-//                        upcCode = productEntity.upcCode,
-//                        id = productEntity.productId
-//                    )
-//                }
-//            }
-//    }
-
-
 }
 
