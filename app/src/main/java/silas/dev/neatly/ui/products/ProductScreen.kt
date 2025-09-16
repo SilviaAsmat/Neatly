@@ -91,6 +91,7 @@ private fun ProductScreen(
                     .fillMaxWidth()
                     .padding(8.dp),
                 label = { Text(productInfo.name) },
+                placeholder = { Text(productInfo.name) }
             )
 
             OutlinedTextField(
@@ -109,7 +110,8 @@ private fun ProductScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                label = { Text(productInfo.description) }
+                label = { Text(productInfo.description) },
+                placeholder = { Text(productInfo.description) }
             )
 
 
