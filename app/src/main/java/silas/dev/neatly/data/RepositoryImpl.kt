@@ -137,7 +137,7 @@ class RepositoryImpl @Inject constructor(
         database.collectionProductsCrossRefDao()
             .getCollectionWithProductsFlow(collectionId) // TODO CRASH
             .map { collectionWithProducts -> // 'it' is the emitted CollectionWithProducts object
-                collectionWithProducts.products.map { productEntity ->
+                collectionWithProducts?.products?.map { productEntity ->
                     // This inner map converts each ProductEntity to a ProductInfo
                     ProductInfo(
                         name = productEntity.name,
@@ -145,7 +145,7 @@ class RepositoryImpl @Inject constructor(
                         upcCode = productEntity.upcCode,
                         id = productEntity.productId
                     )
-                }
+                } ?: emptyList()
             }
             .flowOn(Dispatchers.IO)
 
