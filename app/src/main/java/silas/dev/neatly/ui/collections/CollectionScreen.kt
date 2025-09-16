@@ -18,15 +18,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import silas.dev.neatly.ui.components.AddProductButton
 import silas.dev.neatly.ui.components.ProductCard
+import silas.dev.neatly.ui.home.HomeScreen
 import silas.dev.neatly.ui.products.ProductWithCollectionViewState
 
 @Composable
 fun CollectionScreen(
     viewModel: CollectionScreenViewModel,
     onProductClick: (ProductWithCollectionViewState) -> Unit,
-    onAddProductClick: (ProductWithCollectionViewState) -> Unit
+    onAddProductClick: (ProductWithCollectionViewState) -> Unit,
+    navController: NavHostController
 
 ) {
     val viewState by viewModel.collectionsScreenViewState.collectAsState()
@@ -39,7 +42,7 @@ fun CollectionScreen(
         showDeleteDialog,
         viewModel::onDismissDelete,
         viewModel::onDeleteConfirmed,
-
+        navController
         )
 }
 
@@ -52,8 +55,10 @@ private fun CollectionScreen(
     onDeleteIconClicked: () -> Unit,
     showDeleteDialog: Boolean,
     onDismissDelete: () -> Unit = {},
-    onConfirmDelete: () -> Unit = {}
+    onConfirmDelete: () -> Unit = {},
+    navController: NavHostController
 ) {
+
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { },
@@ -65,9 +70,10 @@ private fun CollectionScreen(
             },
             confirmButton = {
                 TextButton(
-                    onClick = { onConfirmDelete() }
+                    onClick = { onConfirmDelete(); navController.popBackStack() }
                 ) {
                     Text("Confirm")
+
                 }
             },
             dismissButton = {

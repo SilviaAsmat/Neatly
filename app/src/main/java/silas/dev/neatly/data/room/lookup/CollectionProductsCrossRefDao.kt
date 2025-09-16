@@ -12,7 +12,11 @@ import kotlinx.coroutines.flow.Flow
 interface CollectionProductsCrossRefDao {
     @Transaction
     @Query("SELECT * FROM collections WHERE collectionId = :collectionId")
-     fun getCollectionWithProductsFlow(collectionId: Int): Flow<CollectionWithProducts>
+     fun getCollectionWithProductsFlow(collectionId: Int): Flow<CollectionWithProducts>// todo make CollectionWithProducts nullable to fix crash
+
+    @Transaction
+    @Query("SELECT * FROM collections WHERE collectionId = :collectionId")
+    suspend fun getCollectionWithProductsSuspend(collectionId: Int): CollectionWithProducts
 
     @Transaction
     @Query("SELECT * FROM collections")

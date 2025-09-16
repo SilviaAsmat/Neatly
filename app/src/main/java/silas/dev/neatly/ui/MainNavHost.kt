@@ -58,7 +58,7 @@ fun MainNavHost(
                 onProductClick = { productWithCollectionViewState ->
                     navController.navigate(route = ProductScreenDestination(
                         productId = productWithCollectionViewState.productId,
-                        collectionId = productWithCollectionViewState.collectionId
+                        collectionId = productWithCollectionViewState.collectionId,
                     ))
                 },
                 onAddProductClick = { productWithCollectionViewState ->
@@ -67,6 +67,7 @@ fun MainNavHost(
                         collectionId = productWithCollectionViewState.collectionId
                     ))
                 },
+                navController = navController
             )
         }
         composable<ProductScreenDestination> { backStackEntry ->

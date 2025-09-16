@@ -7,10 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import silas.dev.neatly.domain.CollectionInfo
 import silas.dev.neatly.domain.CrossRefInfo
 import silas.dev.neatly.domain.ProductInfo
 import silas.dev.neatly.domain.Repository
@@ -28,13 +26,15 @@ class CollectionScreenViewModel @Inject constructor(
         _collectionsScreenViewState as StateFlow<CollectionScreenViewState>
     private val _showDeleteDialog = MutableStateFlow(false)
     val showDeleteDialog: StateFlow<Boolean> = _showDeleteDialog
+    private val _showEditCollectionDialog = MutableStateFlow(false)
+    val showEditCollectionDialog: StateFlow<Boolean> = _showEditCollectionDialog
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             val collectionId = savedStateHandle.get<Int>("collectionId")
             val data = repo.getCollectionById(collectionId!!)
 
-            repo.getCollectionWithProducts(data.collectionId)
+            repo.getCollectionWithProductsFlow(data.collectionId)
                 .map { productList ->
                     CollectionScreenViewState(
                         collectionName = data.name,
@@ -69,15 +69,11 @@ class CollectionScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val collectionId = savedStateHandle.get<Int>("collectionId")
             val collection = repo.getCollectionById(collectionId!!)
+            val products = repo.getProductsInCollection(collection.collectionId)
             repo.deleteCollection(collection)
-            val productFlow = repo.getCollectionWithProducts(collection.collectionId)
-            productFlow.map { products ->
-                products.forEach { product ->
-                    repo.deleteProductCollectionCrossRef(CrossRefInfo(product.id, collectionId))
-                    repo.deleteProduct(product)
-                }
+            products.forEach { productInfo ->
+                repo.deleteProduct(productInfo)
             }
-
         }
     }
 

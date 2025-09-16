@@ -111,8 +111,8 @@ class RepositoryImpl @Inject constructor(
             name = product.name,
             description = product.description,
             upcCode = product.upcCode
-        )
-        database.productInfoDao().deleteProduct(productEntity)
+        ) // TODO use entity instead?
+        database.productInfoDao().deleteProduct(product.id)
     }
 
     override suspend fun deleteCollection(collection: CollectionInfo) {
@@ -133,9 +133,9 @@ class RepositoryImpl @Inject constructor(
             .deleteProductCollectionCrossRef(crossRefEntity)
     }
 
-    override suspend fun getCollectionWithProducts(collectionId: Int): Flow<List<ProductInfo>> =
+    override suspend fun getCollectionWithProductsFlow(collectionId: Int): Flow<List<ProductInfo>> =
         database.collectionProductsCrossRefDao()
-            .getCollectionWithProductsFlow(collectionId)
+            .getCollectionWithProductsFlow(collectionId) // TODO CRASH
             .map { collectionWithProducts -> // 'it' is the emitted CollectionWithProducts object
                 collectionWithProducts.products.map { productEntity ->
                     // This inner map converts each ProductEntity to a ProductInfo
@@ -173,5 +173,38 @@ class RepositoryImpl @Inject constructor(
                 }
             }
             .flowOn(Dispatchers.IO)
+
+    override suspend fun getProductsInCollection(collectionId: Int): List<ProductInfo> {
+        val products = database
+            .collectionProductsCrossRefDao()
+            .getCollectionWithProductsSuspend(collectionId)
+            .products
+        return products.map { productEntity ->
+            ProductInfo(
+                id = productEntity.productId,
+                name = productEntity.name,
+                description = productEntity.description,
+                upcCode = productEntity.upcCode,
+            )
+        }
+    }
+
+//    override suspend fun getCollectionWithProducts(collectionId: Int): List<ProductInfo> {
+//        database.collectionProductsCrossRefDao()
+//            .getCollectionWithProductsFlow(collectionId)
+//            .map { collectionWithProducts -> // 'it' is the emitted CollectionWithProducts object
+//                collectionWithProducts.products.map { productEntity ->
+//                    // This inner map converts each ProductEntity to a ProductInfo
+//                    ProductInfo(
+//                        name = productEntity.name,
+//                        description = productEntity.description,
+//                        upcCode = productEntity.upcCode,
+//                        id = productEntity.productId
+//                    )
+//                }
+//            }
+//    }
+
+
 }
 

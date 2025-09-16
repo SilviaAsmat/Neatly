@@ -2,12 +2,30 @@ package silas.dev.neatly.data.room.lookup
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Junction
 import androidx.room.Relation
 import silas.dev.neatly.data.room.collection.CollectionsEntity
 import silas.dev.neatly.data.room.product_info.ProductInfoEntity
 
-@Entity(tableName = "cross_ref", primaryKeys = ["collectionId","productId"])
+@Entity(
+    tableName = "cross_ref",
+    primaryKeys = ["collectionId", "productId"],
+    foreignKeys = [
+        ForeignKey(
+            entity = CollectionsEntity::class,
+            parentColumns = ["collectionId"],
+            childColumns = ["collectionId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = ProductInfoEntity::class,
+            parentColumns = ["productId"],
+            childColumns = ["productId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+    ]
+)
 data class CollectionProductsCrossRef(
     val productId: Int,
     val collectionId: Int
