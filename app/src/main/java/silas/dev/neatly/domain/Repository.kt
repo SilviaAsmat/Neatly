@@ -18,6 +18,7 @@ interface Repository {
     suspend fun deleteProductCollectionCrossRef(crossRef: CrossRefInfo)
     suspend fun getAllCollectionsWithProductsFlow(): Flow<List<CollectionWithProducts>>
     suspend fun getProductsInCollection(collectionId: Int): List<ProductInfo>
+    suspend fun addPhoto(photo: PhotoInfo)
 }
 
 data class CollectionWithProducts(

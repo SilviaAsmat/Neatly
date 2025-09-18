@@ -7,10 +7,12 @@ import kotlinx.coroutines.flow.map
 import silas.dev.neatly.data.room.NeatlyDatabase
 import silas.dev.neatly.data.room.collection.CollectionsEntity
 import silas.dev.neatly.data.room.lookup.CollectionProductsCrossRef
+import silas.dev.neatly.data.room.photos.PhotoInfoEntity
 import silas.dev.neatly.data.room.product_info.ProductInfoEntity
 import silas.dev.neatly.domain.CollectionInfo
 import silas.dev.neatly.domain.CollectionWithProducts
 import silas.dev.neatly.domain.CrossRefInfo
+import silas.dev.neatly.domain.PhotoInfo
 import silas.dev.neatly.domain.ProductInfo
 import silas.dev.neatly.domain.Repository
 import javax.inject.Inject
@@ -42,7 +44,7 @@ class RepositoryImpl @Inject constructor(
         database.collectionsDao().insertCollection(collectionEntity)
     }
 
-    override suspend fun getCollections(): List<CollectionInfo> { // TODO: Convert to Flow
+    override suspend fun getCollections(): List<CollectionInfo> {
         val collections = database.collectionsDao().getAllCollections()
         val mapped = collections.map { collectionEntity ->
             CollectionInfo(
@@ -54,7 +56,7 @@ class RepositoryImpl @Inject constructor(
         return mapped
     }
 
-    override suspend fun getProductsWithCollection(productId: Int): List<CollectionInfo> { // TODO: Convert to Flow
+    override suspend fun getProductsWithCollection(productId: Int): List<CollectionInfo> {
         val collections = database.collectionProductsCrossRefDao()
             .getProductsWithCollection(productId).collections
         val mapped = collections.map { collectionEntity ->
@@ -103,15 +105,7 @@ class RepositoryImpl @Inject constructor(
         )
     }
 
-
-    //TODO: Add Delete product/collection
     override suspend fun deleteProduct(product: ProductInfo) {
-        val productEntity = ProductInfoEntity(
-            productId = product.id,
-            name = product.name,
-            description = product.description,
-            upcCode = product.upcCode
-        ) // TODO use entity instead?
         database.productInfoDao().deleteProduct(product.id)
     }
 
@@ -135,10 +129,9 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun getCollectionWithProductsFlow(collectionId: Int): Flow<List<ProductInfo>> =
         database.collectionProductsCrossRefDao()
-            .getCollectionWithProductsFlow(collectionId) // TODO CRASH
-            .map { collectionWithProducts -> // 'it' is the emitted CollectionWithProducts object
+            .getCollectionWithProductsFlow(collectionId)
+            .map { collectionWithProducts ->
                 collectionWithProducts?.products?.map { productEntity ->
-                    // This inner map converts each ProductEntity to a ProductInfo
                     ProductInfo(
                         name = productEntity.name,
                         description = productEntity.description,
@@ -187,6 +180,14 @@ class RepositoryImpl @Inject constructor(
                 upcCode = productEntity.upcCode,
             )
         }
+    }
+    override suspend fun addPhoto(photo: PhotoInfo) {
+        val photoEntity = PhotoInfoEntity(
+            photoId = photo.photoId,
+            uri = photo.uri,
+            productId = photo.productId
+        )
+        database.photoInfoDao().insertPhoto(photoEntity)
     }
 }
 

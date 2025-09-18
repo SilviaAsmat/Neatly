@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface CollectionProductsCrossRefDao {
     @Transaction
     @Query("SELECT * FROM collections WHERE collectionId = :collectionId")
-     fun getCollectionWithProductsFlow(collectionId: Int): Flow<CollectionWithProducts?>// todo make CollectionWithProducts nullable to fix crash
+    fun getCollectionWithProductsFlow(collectionId: Int): Flow<CollectionWithProducts?>
 
     @Transaction
     @Query("SELECT * FROM collections WHERE collectionId = :collectionId")
@@ -20,7 +20,7 @@ interface CollectionProductsCrossRefDao {
 
     @Transaction
     @Query("SELECT * FROM collections")
-     fun getAllCollectionsWithProductsFlow(): Flow<List<CollectionWithProducts>>
+    fun getAllCollectionsWithProductsFlow(): Flow<List<CollectionWithProducts>>
 
     @Transaction
     @Query("SELECT * FROM product_info WHERE productId = :productId")
