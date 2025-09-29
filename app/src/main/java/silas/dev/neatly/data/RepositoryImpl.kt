@@ -80,11 +80,14 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun getProduct(productId: Int): ProductInfo {
         val productEntity = database.productInfoDao().getProduct(productId)
+        val photoInfoList = getPhotosByProductId(productId)
+        val photo = photoInfoList.firstOrNull()
         return ProductInfo(
             name = productEntity.name,
             description = productEntity.description,
             upcCode = productEntity.upcCode,
-            id = productEntity.productId
+            id = productEntity.productId,
+            photoInfo = photo ?: PhotoInfo(0, "", productId)
         )
     }
 
@@ -131,12 +134,16 @@ class RepositoryImpl @Inject constructor(
         database.collectionProductsCrossRefDao()
             .getCollectionWithProductsFlow(collectionId)
             .map { collectionWithProducts ->
+
                 collectionWithProducts?.products?.map { productEntity ->
+                    val photoInfoList = getPhotosByProductId(productEntity.productId)
+                    val photo = photoInfoList.firstOrNull()
                     ProductInfo(
                         name = productEntity.name,
                         description = productEntity.description,
                         upcCode = productEntity.upcCode,
-                        id = productEntity.productId
+                        id = productEntity.productId,
+                        photoInfo = photo?: PhotoInfo(0, "", productEntity.productId)
                     )
                 } ?: emptyList()
             }
@@ -155,11 +162,14 @@ class RepositoryImpl @Inject constructor(
                             description = entity.collection.description
                         ),
                         products = entity.products.map { productEntity ->
+                            val photoInfoList = getPhotosByProductId(productEntity.productId)
+                            val photo = photoInfoList.firstOrNull()
                             ProductInfo(
                                 id = productEntity.productId,
                                 name = productEntity.name,
                                 description = productEntity.description,
-                                upcCode = productEntity.upcCode
+                                upcCode = productEntity.upcCode,
+                                photoInfo = photo?: PhotoInfo(0, "", productEntity.productId)
                             )
                         }
                     )
@@ -173,21 +183,39 @@ class RepositoryImpl @Inject constructor(
             .getCollectionWithProductsSuspend(collectionId)
             .products
         return products.map { productEntity ->
+            val photoInfoList = getPhotosByProductId(productEntity.productId)
+            val photo = photoInfoList.firstOrNull()
             ProductInfo(
                 id = productEntity.productId,
                 name = productEntity.name,
                 description = productEntity.description,
                 upcCode = productEntity.upcCode,
+                photoInfo = photo?: PhotoInfo(0, "", productEntity.productId)
             )
         }
     }
-    override suspend fun addPhoto(photo: PhotoInfo) {
+    override suspend fun setPhoto(photo: PhotoInfo) {
         val photoEntity = PhotoInfoEntity(
             photoId = photo.photoId,
             uri = photo.uri,
             productId = photo.productId
         )
         database.photoInfoDao().insertPhoto(photoEntity)
+    }
+
+    override suspend fun getPhotosByProductId(productId: Int): List<PhotoInfo> {
+        val photos = database.photoInfoDao().getPhotosByProductId(productId)
+        if (photos.isEmpty()) {
+            return emptyList()
+        }
+        val mapped = photos.map { photoEntity ->
+            PhotoInfo(
+                photoId = photoEntity.photoId,
+                uri = photoEntity.uri,
+                productId = photoEntity.productId
+            )
+        }
+        return mapped
     }
 }
 

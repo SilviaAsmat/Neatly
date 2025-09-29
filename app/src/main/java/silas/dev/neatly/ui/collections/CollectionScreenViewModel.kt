@@ -43,7 +43,8 @@ class CollectionScreenViewModel @Inject constructor(
                             ProductInfoViewState(
                                 name = product.name,
                                 description = product.description,
-                                id = product.id
+                                id = product.id,
+                                photoInfo = ProductInfoViewState.NONE.photoInfo
                             )
                         }
                     )

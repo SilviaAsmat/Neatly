@@ -74,7 +74,8 @@ fun ProductCardPreview() {
         productInfo = ProductInfoViewState(
             name = "item name",
             description = "blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah",
-            id = 0
+            id = 0,
+            photoInfo = ProductInfoViewState.NONE.photoInfo
         ),
         onProductClick = { Unit },
     )

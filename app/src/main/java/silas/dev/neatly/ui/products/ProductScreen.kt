@@ -18,28 +18,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import silas.dev.neatly.ui.components.GetImageFromGallery
+import silas.dev.neatly.ui.components.photo_picker.DisplayProductPhoto
 
 @Composable
 fun ProductScreen(
     viewModel: ProductScreenViewModel
 ) {
     val viewState by viewModel.productInfoViewState.collectAsState()
+
     ProductScreen(
         viewState,
         viewModel::saveProduct,
         nameState = viewModel.nameLabel,
-        descriptionState = viewModel.descriptionLabel
+        descriptionState = viewModel.descriptionLabel,
+        onImageSelected = viewModel::setPhoto,
     )
 }
 
@@ -48,7 +49,8 @@ private fun ProductScreen(
     productInfo: ProductInfoViewState,
     onSaveClick: () -> Unit,
     nameState: TextFieldState,
-    descriptionState: TextFieldState
+    descriptionState: TextFieldState,
+    onImageSelected: (uri: String) -> Unit
 ) {
     Scaffold(floatingActionButton = {
         ExtendedFloatingActionButton(
@@ -64,8 +66,7 @@ private fun ProductScreen(
         Column(modifier = Modifier
             .padding(innerPadding)
             .verticalScroll(scrollState)) {
-            GetImageFromGallery(onImageSelected = {}) // Prompts user for image and displays it.
-            // TODO get image uri and save into db
+            GetImageFromGallery(onImageSelected) // Prompts user for image
             Text(
                 text = "Product Info",
                 textAlign = TextAlign.Center,
@@ -83,7 +84,7 @@ private fun ProductScreen(
                     .padding(16.dp)
                     .align(Alignment.CenterHorizontally),
             ) {
-
+//                DisplayProductPhoto(productInfo.photoInfo)
             }
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
@@ -124,10 +125,7 @@ private fun ProductScreen(
                 label = { Text(productInfo.description) },
                 placeholder = { Text(productInfo.description) }
             )
-
-
         }
-
     }
 }
 

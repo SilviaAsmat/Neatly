@@ -9,10 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import silas.dev.neatly.domain.PhotoInfo
 import silas.dev.neatly.domain.ProductInfo
 import silas.dev.neatly.domain.Repository
-import silas.dev.neatly.ui.home.HomeScreenViewState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +24,7 @@ class ProductScreenViewModel @Inject constructor(
         MutableStateFlow<ProductInfoViewState>(ProductInfoViewState.NONE)
     val productInfoViewState: StateFlow<ProductInfoViewState> = _productInfoViewState
 
+
     val nameLabel: TextFieldState = TextFieldState()
     val descriptionLabel: TextFieldState = TextFieldState()
 
@@ -34,11 +35,13 @@ class ProductScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val newState: ProductInfoViewState
             if (id > 0) {
+                val photoInfo = getPhoto()
                 val product = repo.getProduct(id)
                 newState = ProductInfoViewState(
                     product.id,
                     name = product.name,
-                    description = product.description
+                    description = product.description,
+                    photoInfo = photoInfo
                 )
             } else {
                 newState = ProductInfoViewState.NONE
@@ -54,7 +57,8 @@ class ProductScreenViewModel @Inject constructor(
                     id = id,
                     name = nameLabel.text.toString(),
                     description = descriptionLabel.text.toString(),
-                    upcCode = ""
+                    upcCode = "",
+                    photoInfo = PhotoInfo(0, "", id)
                 )
                 id = repo.addProduct(data).toInt()
                 val collectionId = savedStateHandle.get<Int>("collectionId")
@@ -63,9 +67,9 @@ class ProductScreenViewModel @Inject constructor(
         }
     }
 
-    fun addPhoto(uri: String){
+    fun setPhoto(uri: String){
         viewModelScope.launch(Dispatchers.IO){
-            repo.addPhoto(
+            repo.setPhoto(
                 PhotoInfo(
                     photoId = 0,
                     uri = uri,
@@ -73,6 +77,21 @@ class ProductScreenViewModel @Inject constructor(
                 )
             )
         }
-
     }
+
+    // A function to trigger the fetch, often called from the UI or an init block.
+    suspend fun getPhoto(): PhotoInfoViewState {
+        return withContext(Dispatchers.IO) {
+            val photo = repo.getPhotosByProductId(id)
+            if (photo.isEmpty()) {
+                return@withContext PhotoInfoViewState.NONE
+            }
+            PhotoInfoViewState(
+                photoId = photo[0].photoId,
+                uri = photo[0].uri,
+                productId = photo[0].productId
+            ) // The last expression is the return value of the withContext block.
+        }
+    }
+
 }
