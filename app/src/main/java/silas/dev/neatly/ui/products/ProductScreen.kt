@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -26,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import silas.dev.neatly.ui.components.GetImageFromGallery
 
 @Composable
 fun ProductScreen(
@@ -55,13 +58,21 @@ private fun ProductScreen(
         )
     }
     ) { innerPadding ->
+        val scrollState = rememberScrollState()
+
         // TODO fix text state and save/deletion for different fields
-        Column(modifier = Modifier.padding(innerPadding)) {
+        Column(modifier = Modifier
+            .padding(innerPadding)
+            .verticalScroll(scrollState)) {
+            GetImageFromGallery(onImageSelected = {}) // Prompts user for image and displays it.
+            // TODO get image uri and save into db
             Text(
                 text = "Product Info",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary
             )
             Box(
@@ -71,7 +82,7 @@ private fun ProductScreen(
                     .fillMaxWidth(.95f)
                     .padding(16.dp)
                     .align(Alignment.CenterHorizontally),
-                ) {
+            ) {
 
             }
             OutlinedTextField(

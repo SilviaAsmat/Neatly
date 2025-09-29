@@ -7,5 +7,5 @@ import androidx.room.OnConflictStrategy
 @Dao
 interface PhotoInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPhoto(photo: PhotoInfoEntity): Int
+    fun insertPhoto(photo: PhotoInfoEntity)
 }

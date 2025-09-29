@@ -85,4 +85,11 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:1.3.2")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.5.0-alpha03")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
+    // Google Play
+    implementation("com.google.android.gms:play-services-base:18.2.0")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.6.0") // Or the latest version
+    implementation("androidx.activity:activity-compose:1.9.0") // Or the latest version
 }

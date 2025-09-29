@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import silas.dev.neatly.domain.PhotoInfo
 import silas.dev.neatly.domain.ProductInfo
 import silas.dev.neatly.domain.Repository
 import silas.dev.neatly.ui.home.HomeScreenViewState
@@ -59,6 +60,18 @@ class ProductScreenViewModel @Inject constructor(
                 val collectionId = savedStateHandle.get<Int>("collectionId")
                 repo.addProductCollectionCrossRef(id, collectionId = collectionId!!)
             }
+        }
+    }
+
+    fun addPhoto(uri: String){
+        viewModelScope.launch(Dispatchers.IO){
+            repo.addPhoto(
+                PhotoInfo(
+                    photoId = 0,
+                    uri = uri,
+                    productId = id
+                )
+            )
         }
 
     }
