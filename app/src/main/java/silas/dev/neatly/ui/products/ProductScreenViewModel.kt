@@ -8,8 +8,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import silas.dev.neatly.domain.PhotoInfo
 import silas.dev.neatly.domain.ProductInfo
 import silas.dev.neatly.domain.Repository
@@ -24,24 +24,33 @@ class ProductScreenViewModel @Inject constructor(
         MutableStateFlow<ProductInfoViewState>(ProductInfoViewState.NONE)
     val productInfoViewState: StateFlow<ProductInfoViewState> = _productInfoViewState
 
+    private val _photoInfoViewState =
+        MutableStateFlow<PhotoInfoViewState>(PhotoInfoViewState.Loading)
+    val photoInfoViewState: StateFlow<PhotoInfoViewState> = _photoInfoViewState
 
     val nameLabel: TextFieldState = TextFieldState()
     val descriptionLabel: TextFieldState = TextFieldState()
 
     private var id: Int = 0
 
-    fun initWithId(id: Int) {
-        this.id = id
+//    init {
+//        val productId = savedStateHandle.get<Int>("productId")
+//        if (productId != null) {
+//            initWithId(productId)
+//        }
+//    }
+
+    fun initWithId(productId: Int) {
+        this.id = productId
         viewModelScope.launch(Dispatchers.IO) {
             val newState: ProductInfoViewState
-            if (id > 0) {
-                val photoInfo = getPhoto()
-                val product = repo.getProduct(id)
+            if (productId > 0) {
+                initPhotoInfoViewState(productId)
+                val product = repo.getProduct(productId)
                 newState = ProductInfoViewState(
                     product.id,
                     name = product.name,
                     description = product.description,
-                    photoInfo = photoInfo
                 )
             } else {
                 newState = ProductInfoViewState.NONE
@@ -51,47 +60,55 @@ class ProductScreenViewModel @Inject constructor(
     }
 
     fun saveProduct() {
-        if (id != 0) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val data = ProductInfo(
-                    id = id,
-                    name = nameLabel.text.toString(),
-                    description = descriptionLabel.text.toString(),
-                    upcCode = "",
-                    photoInfo = PhotoInfo(0, "", id)
+        viewModelScope.launch(Dispatchers.IO) {
+            val data = ProductInfo(
+                id = id,
+                name = nameLabel.text.toString(),
+                description = descriptionLabel.text.toString(),
+                upcCode = "",
+                photoInfo = PhotoInfo(0, "", id) // TODO SAA remove?
+            )
+            // Save product to db
+            val productId = repo.addProduct(data).toInt()
+            val collectionId = savedStateHandle.get<Int>("collectionId")
+            // Add product to collection
+            repo.addProductCollectionCrossRef(productId, collectionId = collectionId!!)
+            // Associate photo with product
+            (_photoInfoViewState.value as? PhotoInfoViewState.Data)?.let { photoViewState ->
+                repo.setPhoto(
+                    PhotoInfo(
+                        photoId = 0,
+                        uri = photoViewState.uri,
+                        productId = productId
+                    )
                 )
-                id = repo.addProduct(data).toInt()
-                val collectionId = savedStateHandle.get<Int>("collectionId")
-                repo.addProductCollectionCrossRef(id, collectionId = collectionId!!)
             }
+            // Cache product Id
+            this@ProductScreenViewModel.id = productId
         }
     }
 
     fun setPhoto(uri: String){
-        viewModelScope.launch(Dispatchers.IO){
-            repo.setPhoto(
-                PhotoInfo(
-                    photoId = 0,
-                    uri = uri,
-                    productId = id
-                )
-            )
-        }
+        val newPhotoViewState = PhotoInfoViewState.Data(
+            photoId = 0,// For now we only support one photo per product
+            uri = uri,
+            productId = this.id,
+        )
+        _photoInfoViewState.update { newPhotoViewState }
     }
 
-    // A function to trigger the fetch, often called from the UI or an init block.
-    suspend fun getPhoto(): PhotoInfoViewState {
-        return withContext(Dispatchers.IO) {
-            val photo = repo.getPhotosByProductId(id)
-            if (photo.isEmpty()) {
-                return@withContext PhotoInfoViewState.NONE
-            }
-            PhotoInfoViewState(
-                photoId = photo[0].photoId,
-                uri = photo[0].uri,
-                productId = photo[0].productId
-            ) // The last expression is the return value of the withContext block.
+    private suspend fun initPhotoInfoViewState(productId: Int) {
+        val photos = repo.getPhotosByProductId(productId)
+        val viewState = if (photos.isEmpty()) {
+            PhotoInfoViewState.Empty
+        } else {
+            PhotoInfoViewState.Data(
+                photoId = photos[0].photoId,// For now we only support one photo per product
+                uri = photos[0].uri,
+                productId = photos[0].productId,
+            )
         }
+        _photoInfoViewState.update{viewState}
     }
 
 }

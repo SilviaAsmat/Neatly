@@ -34,6 +34,7 @@ fun ProductScreen(
     viewModel: ProductScreenViewModel
 ) {
     val viewState by viewModel.productInfoViewState.collectAsState()
+    val photoInfoViewState by viewModel.photoInfoViewState.collectAsState()
 
     ProductScreen(
         viewState,
@@ -41,6 +42,7 @@ fun ProductScreen(
         nameState = viewModel.nameLabel,
         descriptionState = viewModel.descriptionLabel,
         onImageSelected = viewModel::setPhoto,
+        photoInfoViewState = photoInfoViewState,
     )
 }
 
@@ -50,7 +52,8 @@ private fun ProductScreen(
     onSaveClick: () -> Unit,
     nameState: TextFieldState,
     descriptionState: TextFieldState,
-    onImageSelected: (uri: String) -> Unit
+    onImageSelected: (uri: String) -> Unit,
+    photoInfoViewState: PhotoInfoViewState,
 ) {
     Scaffold(floatingActionButton = {
         ExtendedFloatingActionButton(
@@ -76,16 +79,17 @@ private fun ProductScreen(
                     .fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary
             )
-            Box(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                    .height(200.dp)
-                    .fillMaxWidth(.95f)
-                    .padding(16.dp)
-                    .align(Alignment.CenterHorizontally),
-            ) {
-//                DisplayProductPhoto(productInfo.photoInfo)
-            }
+            DisplayProductPhoto(photoInfoViewState)
+//            Box(
+//                modifier = Modifier
+//                    .background(MaterialTheme.colorScheme.secondaryContainer)
+//                    .height(200.dp)
+//                    .fillMaxWidth(.95f)
+//                    .padding(16.dp)
+//                    .align(Alignment.CenterHorizontally),
+//            ) {
+//
+//            }
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
                     focusedTextColor = MaterialTheme.colorScheme.primary,

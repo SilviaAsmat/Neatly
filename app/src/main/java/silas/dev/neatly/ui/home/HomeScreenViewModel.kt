@@ -40,7 +40,6 @@ class HomeScreenViewModel @Inject constructor(
                                 id = product.id,
                                 name = product.name,
                                 description = product.description,
-                                photoInfo = ProductInfoViewState.NONE.photoInfo
                             )
                         }
                     )

@@ -46,54 +46,57 @@ import androidx.core.net.toUri
 
 @Composable
 fun DisplayProductPhoto(photoInfo: PhotoInfoViewState) {
-    val context = LocalContext.current
-    // Create a remembered variable to store the loaded image bitmap
-    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+
+    if (photoInfo is PhotoInfoViewState.Data) {
+        val context = LocalContext.current
+        // Create a remembered variable to store the loaded image bitmap
+        var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
 
 //    // Create a remembered variable to track whether an image is loaded
-    var isImageLoaded by remember { mutableStateOf(false) }
+        var isImageLoaded by remember { mutableStateOf(false) }
 
-    // Convert the URI to a Bitmap and set it as the imageBitmap
-    val uri: Uri = photoInfo.uri.toUri()
-    imageBitmap = UriUtils().uriToBitmap(context, uri)?.asImageBitmap()
+        // Convert the URI to a Bitmap and set it as the imageBitmap
+        val uri: Uri = photoInfo.uri.toUri()
+        imageBitmap = UriUtils().uriToBitmap(context, uri)?.asImageBitmap()
 
-    // Set isImageLoaded to true
-    isImageLoaded = true
+        // Set isImageLoaded to true
+        isImageLoaded = true
 
-    // Create a Card composable to wrap the image and button
-    Card(
-        shape = RoundedCornerShape(dimen_14dp),
-        modifier = Modifier.padding(dimen_10dp, dimen_16dp, dimen_10dp, dimen_16dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = dimen_10dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-    ) {
+        // Create a Card composable to wrap the image and button
+        Card(
+            shape = RoundedCornerShape(dimen_14dp),
+            modifier = Modifier.padding(dimen_10dp, dimen_16dp, dimen_10dp, dimen_16dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = dimen_10dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        ) {
 //        // Create a Column to arrange the image and button vertically
-        Column {
-            // Check if an image is loaded
-            if (isImageLoaded) {
-                // Display the loaded image using the Image composable
-                imageBitmap?.let {
-                    Image(
-                        bitmap = it,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .height(dimen_200dp)
-                            .fillMaxWidth()
-                            .clip(
-                                RoundedCornerShape(
-                                    bottomStart = dimen_18dp,
-                                    bottomEnd = dimen_18dp
+            Column {
+                // Check if an image is loaded
+                if (isImageLoaded) {
+                    // Display the loaded image using the Image composable
+                    imageBitmap?.let {
+                        Image(
+                            bitmap = it,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .height(dimen_200dp)
+                                .fillMaxWidth()
+                                .clip(
+                                    RoundedCornerShape(
+                                        bottomStart = dimen_18dp,
+                                        bottomEnd = dimen_18dp
+                                    )
                                 )
-                            )
-                    )
+                        )
+                    }
                 }
+
+                // Add spacing
+                Spacer(modifier = Modifier.height(dimen_5dp))
+
+
             }
-
-            // Add spacing
-            Spacer(modifier = Modifier.height(dimen_5dp))
-
-
         }
     }
 }
