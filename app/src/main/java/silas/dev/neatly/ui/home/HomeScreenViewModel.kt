@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import silas.dev.neatly.domain.CollectionInfo
 import silas.dev.neatly.domain.Repository
 import silas.dev.neatly.ui.collections.CollectionInfoViewState
+import silas.dev.neatly.ui.collections.CollectionProductItemViewState
 import silas.dev.neatly.ui.collections.CollectionRowViewState
 import silas.dev.neatly.ui.products.ProductInfoViewState
 import javax.inject.Inject
@@ -36,11 +37,28 @@ class HomeScreenViewModel @Inject constructor(
                             description = collectionWithProducts.collection.description
                         ),
                         products = collectionWithProducts.products.map { product ->
-                            ProductInfoViewState(
-                                id = product.id,
-                                name = product.name,
-                                description = product.description,
-                            )
+//                            val photoUri = repo.getPhotosByProductId(product.id)[0].uri
+                            val photoInfo = repo.getPhotosByProductId(product.id)
+                            if (photoInfo.isNotEmpty()) {
+                                CollectionProductItemViewState(
+                                    productInfo = ProductInfoViewState(
+                                        id = product.id,
+                                        name = product.name,
+                                        description = product.description
+                                    ),
+                                    photoUri = photoInfo[0].uri
+                                )
+                            } else {
+                                CollectionProductItemViewState(
+                                    productInfo = ProductInfoViewState(
+                                        id = product.id,
+                                        name = product.name,
+                                        description = product.description
+                                    ),
+                                    photoUri = ""
+                                )
+                            }
+
                         }
                     )
                 }

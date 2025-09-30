@@ -73,7 +73,6 @@ private fun CollectionScreen(
                     onClick = { onConfirmDelete(); navController.popBackStack() }
                 ) {
                     Text("Confirm")
-
                 }
             },
             dismissButton = {
@@ -107,7 +106,7 @@ private fun CollectionScreen(
                 ) {
                     onProductClick(
                         ProductWithCollectionViewState(
-                            viewState.products[index].id,
+                            viewState.products[index].productInfo.id,
                             viewState.collectionId
                         )
                     )

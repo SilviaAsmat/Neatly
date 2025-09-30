@@ -48,15 +48,22 @@ import androidx.core.net.toUri
 fun DisplayProductPhoto(photoInfo: PhotoInfoViewState) {
 
     if (photoInfo is PhotoInfoViewState.Data) {
+        PhotoContent(photoInfo.uri)
+    }
+}
+
+@Composable
+fun PhotoContent(uriAsString: String) {
+    if (uriAsString.isNotEmpty()) {
         val context = LocalContext.current
         // Create a remembered variable to store the loaded image bitmap
         var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
 
-//    // Create a remembered variable to track whether an image is loaded
+        // Create a remembered variable to track whether an image is loaded
         var isImageLoaded by remember { mutableStateOf(false) }
 
         // Convert the URI to a Bitmap and set it as the imageBitmap
-        val uri: Uri = photoInfo.uri.toUri()
+        val uri: Uri = uriAsString.toUri()
         imageBitmap = UriUtils().uriToBitmap(context, uri)?.asImageBitmap()
 
         // Set isImageLoaded to true
@@ -69,7 +76,7 @@ fun DisplayProductPhoto(photoInfo: PhotoInfoViewState) {
             elevation = CardDefaults.cardElevation(defaultElevation = dimen_10dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         ) {
-//        // Create a Column to arrange the image and button vertically
+            // Create a Column to arrange the image and button vertically
             Column {
                 // Check if an image is loaded
                 if (isImageLoaded) {
@@ -91,12 +98,11 @@ fun DisplayProductPhoto(photoInfo: PhotoInfoViewState) {
                         )
                     }
                 }
-
                 // Add spacing
                 Spacer(modifier = Modifier.height(dimen_5dp))
-
-
             }
         }
     }
+
+
 }

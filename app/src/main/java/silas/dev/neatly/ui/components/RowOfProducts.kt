@@ -7,12 +7,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import silas.dev.neatly.ui.collections.CollectionProductItemViewState
 import silas.dev.neatly.ui.products.ProductInfoViewState
 import silas.dev.neatly.ui.products.ProductWithCollectionViewState
 
 @Composable
 fun RowOfProducts(
-    products: List<ProductInfoViewState>,
+    products: List<CollectionProductItemViewState>,
     onProductClick: (ProductWithCollectionViewState) -> Unit,
     collectionId: Int
 ){
@@ -24,8 +25,8 @@ fun RowOfProducts(
     ) {
         items(count = products.size) { index ->
             ProductCard(
-                productInfo = products[index],
-                onProductClick = { onProductClick(ProductWithCollectionViewState(products[index].id, collectionId)) },
+                collectionProduct = products[index],
+                onProductClick = { onProductClick(ProductWithCollectionViewState(products[index].productInfo.id, collectionId)) },
             )
         }
     }

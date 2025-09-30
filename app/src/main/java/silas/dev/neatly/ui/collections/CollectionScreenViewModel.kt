@@ -36,16 +36,22 @@ class CollectionScreenViewModel @Inject constructor(
 
             repo.getCollectionWithProductsFlow(data.collectionId)
                 .map { productList ->
+                    val products = productList.map { product ->
+                        val info = ProductInfoViewState(
+                            name = product.name,
+                            description = product.description,
+                            id = product.id,
+                        )
+                        val photoUri = repo.getPhotosByProductId(product.id)[0].uri
+                        CollectionProductItemViewState(
+                            productInfo = info,
+                            photoUri = photoUri,
+                        )
+                    }
                     CollectionScreenViewState(
                         collectionName = data.name,
                         collectionId = data.collectionId,
-                        products = productList.map { product ->
-                            ProductInfoViewState(
-                                name = product.name,
-                                description = product.description,
-                                id = product.id,
-                            )
-                        }
+                        products = products
                     )
                 }
                 .collect { newState ->

@@ -33,13 +33,6 @@ class ProductScreenViewModel @Inject constructor(
 
     private var id: Int = 0
 
-//    init {
-//        val productId = savedStateHandle.get<Int>("productId")
-//        if (productId != null) {
-//            initWithId(productId)
-//        }
-//    }
-
     fun initWithId(productId: Int) {
         this.id = productId
         viewModelScope.launch(Dispatchers.IO) {

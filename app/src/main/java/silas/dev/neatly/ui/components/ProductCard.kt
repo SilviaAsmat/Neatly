@@ -1,6 +1,5 @@
 package silas.dev.neatly.ui.components
 
-import android.graphics.fonts.FontStyle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,18 +18,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import silas.dev.neatly.ui.collections.CollectionProductItemViewState
+import silas.dev.neatly.ui.components.photo_picker.DisplayProductPhoto
+import silas.dev.neatly.ui.components.photo_picker.PhotoContent
 import silas.dev.neatly.ui.products.ProductInfoViewState
 
 @Composable
 fun ProductCard(
-    productInfo: ProductInfoViewState,
+    collectionProduct: CollectionProductItemViewState,
     onProductClick: (Int) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .padding(8.dp)
             .background(Color.White)
-            .clickable { onProductClick(productInfo.id) }
+            .clickable { onProductClick(collectionProduct.productInfo.id) }
     )
     {
         Column(
@@ -40,24 +42,26 @@ fun ProductCard(
                 .width(140.dp)
         )
         {
-            Box(
-                modifier = Modifier
-                    .background(Color.Gray)
-                    .height(150.dp)
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                // TODO: Add image here, might not need Box, also image might not exist
-            }
+//            Box(
+//                modifier = Modifier
+//                    .background(Color.Gray)
+//                    .height(150.dp)
+//                    .fillMaxWidth()
+//                    .align(Alignment.CenterHorizontally)
+//            ) {
+//                // TODO: Add image here, might not need Box, also image might not exist
+//
+//            }
+            PhotoContent(collectionProduct.photoUri.toString())
             Text(
-                text = productInfo.name,
+                text = collectionProduct.productInfo.name,
                 modifier = Modifier.padding(0.dp, 8.dp),
                 color = Color.Black,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = productInfo.description,
+                text = collectionProduct.productInfo.description,
                 maxLines = 1,
                 modifier = Modifier.padding(0.dp, 8.dp),
                 color = Color.Black,
@@ -71,11 +75,13 @@ fun ProductCard(
 @Composable
 fun ProductCardPreview() {
     ProductCard(
-        productInfo = ProductInfoViewState(
+        collectionProduct = CollectionProductItemViewState(
+            productInfo = ProductInfoViewState(
             name = "item name",
             description = "blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah",
             id = 0,
         ),
+            photoUri = null),
         onProductClick = { Unit },
     )
 }
