@@ -42,16 +42,6 @@ fun ProductCard(
                 .width(140.dp)
         )
         {
-//            Box(
-//                modifier = Modifier
-//                    .background(Color.Gray)
-//                    .height(150.dp)
-//                    .fillMaxWidth()
-//                    .align(Alignment.CenterHorizontally)
-//            ) {
-//                // TODO: Add image here, might not need Box, also image might not exist
-//
-//            }
             PhotoContent(collectionProduct.photoUri.toString())
             Text(
                 text = collectionProduct.productInfo.name,

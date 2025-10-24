@@ -17,7 +17,6 @@ fun HeaderLabel(name: String, onCollectionClick: () -> Unit) {
         modifier = Modifier
             .padding(top = 6.dp, bottom = 6.dp, start = 16.dp)
             .clickable {onCollectionClick()},
-        color = Color.Black,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp,
     )

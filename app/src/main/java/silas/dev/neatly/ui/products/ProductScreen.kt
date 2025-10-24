@@ -1,8 +1,10 @@
 package silas.dev.neatly.ui.products
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -56,20 +58,25 @@ private fun ProductScreen(
     photoInfoViewState: PhotoInfoViewState,
 ) {
     Scaffold(floatingActionButton = {
-        ExtendedFloatingActionButton(
-            onClick = onSaveClick,
-            icon = { Icon(Icons.Filled.Save, "Extended floating action button.") },
-            text = { Text(text = "Save") },
-        )
+        Row(modifier = Modifier.padding(8.dp),horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            GetImageFromGallery(onImageSelected) // Prompts user for image,
+            ExtendedFloatingActionButton(
+                onClick = onSaveClick,
+                icon = { Icon(Icons.Filled.Save, "Extended floating action button.") },
+                text = { Text(text = "Save") }
+            )
+        }
     }
     ) { innerPadding ->
         val scrollState = rememberScrollState()
 
         // TODO fix text state and save/deletion for different fields
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .verticalScroll(scrollState)) {
-            GetImageFromGallery(onImageSelected) // Prompts user for image
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(scrollState)
+        ) {
+
             Text(
                 text = "Product Info",
                 textAlign = TextAlign.Center,
@@ -80,16 +87,6 @@ private fun ProductScreen(
                 color = MaterialTheme.colorScheme.primary
             )
             DisplayProductPhoto(photoInfoViewState)
-//            Box(
-//                modifier = Modifier
-//                    .background(MaterialTheme.colorScheme.secondaryContainer)
-//                    .height(200.dp)
-//                    .fillMaxWidth(.95f)
-//                    .padding(16.dp)
-//                    .align(Alignment.CenterHorizontally),
-//            ) {
-//
-//            }
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
                     focusedTextColor = MaterialTheme.colorScheme.primary,
