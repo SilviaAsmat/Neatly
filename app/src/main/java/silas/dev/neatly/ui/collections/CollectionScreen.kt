@@ -1,5 +1,6 @@
 package silas.dev.neatly.ui.collections
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import silas.dev.neatly.ui.components.AddProductButton
 import silas.dev.neatly.ui.components.ProductCard
@@ -43,7 +45,7 @@ fun CollectionScreen(
         viewModel::onDismissDelete,
         viewModel::onDeleteConfirmed,
         navController
-        )
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +101,12 @@ private fun CollectionScreen(
     }
     )
     { innerPadding ->
-        LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.padding(innerPadding)) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.padding(innerPadding).padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             items(viewState.products.size) { index ->
                 ProductCard(
                     viewState.products[index]

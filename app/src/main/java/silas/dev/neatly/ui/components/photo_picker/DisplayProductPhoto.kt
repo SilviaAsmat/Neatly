@@ -72,8 +72,6 @@ fun PhotoContent(uriAsString: String) {
 
         // Create a Card composable to wrap the image and button
         Card(
-            shape = RoundedCornerShape(dimen_14dp),
-            modifier = Modifier.padding(dimen_10dp, dimen_16dp, dimen_10dp, dimen_16dp),
             elevation = CardDefaults.cardElevation(defaultElevation = dimen_10dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         ) {
@@ -90,17 +88,9 @@ fun PhotoContent(uriAsString: String) {
                             modifier = Modifier
                                 .height(dimen_200dp)
                                 .fillMaxWidth()
-                                .clip(
-                                    RoundedCornerShape(
-                                        bottomStart = dimen_18dp,
-                                        bottomEnd = dimen_18dp
-                                    )
-                                )
                         )
                     }
                 }
-                // Add spacing
-                Spacer(modifier = Modifier.height(dimen_5dp))
             }
         }
     }

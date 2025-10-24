@@ -66,7 +66,7 @@ private fun ProductScreen(
                 text = { Text(text = "Save") }
             )
         }
-    }
+    }, modifier = Modifier.padding(8.dp),
     ) { innerPadding ->
         val scrollState = rememberScrollState()
 
@@ -74,55 +74,31 @@ private fun ProductScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .verticalScroll(scrollState)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
             Text(
                 text = "Product Info",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary
             )
             DisplayProductPhoto(photoInfoViewState)
             OutlinedTextField(
-                colors = TextFieldDefaults.colors(
-                    focusedTextColor = MaterialTheme.colorScheme.primary,
-                    unfocusedTextColor = MaterialTheme.colorScheme.secondary,
-                    disabledTextColor = MaterialTheme.colorScheme.primary,
-                    cursorColor = MaterialTheme.colorScheme.primary,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,  // Border color when focused
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
-                    focusedLabelColor = MaterialTheme.colorScheme.primary,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.secondary
-                ),
                 lineLimits = TextFieldLineLimits.SingleLine,
                 state = nameState,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
+                    .fillMaxWidth(),
                 label = { Text(productInfo.name) },
                 placeholder = { Text(productInfo.name) }
             )
 
             OutlinedTextField(
-                colors = TextFieldDefaults.colors(
-                    focusedTextColor = MaterialTheme.colorScheme.primary,
-                    unfocusedTextColor = MaterialTheme.colorScheme.secondary,
-                    disabledTextColor = MaterialTheme.colorScheme.primary,
-                    cursorColor = MaterialTheme.colorScheme.primary,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,  // Border color when focused
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
-                    focusedLabelColor = MaterialTheme.colorScheme.primary,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.secondary
-                ),
                 lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 7),
                 state = descriptionState,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
+                    .fillMaxWidth(),
                 label = { Text(productInfo.description) },
                 placeholder = { Text(productInfo.description) }
             )

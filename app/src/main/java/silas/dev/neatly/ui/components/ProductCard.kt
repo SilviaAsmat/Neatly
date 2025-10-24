@@ -28,36 +28,26 @@ fun ProductCard(
     collectionProduct: CollectionProductItemViewState,
     onProductClick: (Int) -> Unit,
 ) {
-    Row(
+    Column(
         modifier = Modifier
-            .padding(8.dp)
-            .background(Color.White)
             .clickable { onProductClick(collectionProduct.productInfo.id) }
+            .width(180.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     )
     {
-        Column(
-            modifier = Modifier
-                .padding(8.dp, 8.dp)
-                .background(Color.White)
-                .width(140.dp)
+        PhotoContent(collectionProduct.photoUri.toString())
+        Text(
+            text = collectionProduct.productInfo.name,
+            modifier = Modifier.padding(0.dp, 8.dp),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
         )
-        {
-            PhotoContent(collectionProduct.photoUri.toString())
-            Text(
-                text = collectionProduct.productInfo.name,
-                modifier = Modifier.padding(0.dp, 8.dp),
-                color = Color.Black,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = collectionProduct.productInfo.description,
-                maxLines = 1,
-                modifier = Modifier.padding(0.dp, 8.dp),
-                color = Color.Black,
-                fontSize = 12.sp
-            )
-        }
+        Text(
+            text = collectionProduct.productInfo.description,
+            maxLines = 1,
+            modifier = Modifier.padding(0.dp, 8.dp),
+            fontSize = 12.sp
+        )
     }
 }
 
