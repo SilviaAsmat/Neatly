@@ -37,7 +37,6 @@ private fun HomeScreen(
     Scaffold(
         topBar = { HomeTopBar() },
         floatingActionButton = {AddCollectionButton(onValueChange)},
-        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         when (homeViewState) {
             is HomeScreenViewState.Data ->

@@ -42,7 +42,8 @@ class CollectionScreenViewModel @Inject constructor(
                             description = product.description,
                             id = product.id,
                         )
-                        val photoUri = repo.getPhotosByProductId(product.id)[0].uri
+                        val photoUri = repo.getPhotosByProductId(product.id).firstOrNull()?.uri
+
                         CollectionProductItemViewState(
                             productInfo = info,
                             photoUri = photoUri,

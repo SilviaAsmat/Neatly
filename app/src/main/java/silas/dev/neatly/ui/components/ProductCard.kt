@@ -35,7 +35,10 @@ fun ProductCard(
         horizontalAlignment = Alignment.CenterHorizontally,
     )
     {
-        PhotoContent(collectionProduct.photoUri.toString())
+        collectionProduct.photoUri?.let{
+            PhotoContent(collectionProduct.photoUri)
+        }
+
         Text(
             text = collectionProduct.productInfo.name,
             modifier = Modifier.padding(0.dp, 8.dp),

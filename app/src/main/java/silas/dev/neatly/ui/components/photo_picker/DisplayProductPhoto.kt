@@ -1,6 +1,7 @@
 package silas.dev.neatly.ui.components.photo_picker
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.Composable
 
 import silas.dev.neatly.ui.theme.dimen_10dp
@@ -49,13 +50,16 @@ import androidx.core.net.toUri
 fun DisplayProductPhoto(photoInfo: PhotoInfoViewState) {
 
     if (photoInfo is PhotoInfoViewState.Data) {
-        PhotoContent(photoInfo.uri)
+//        PhotoContent(photoInfo.uri)
     }
 }
 
 @Composable
 fun PhotoContent(uriAsString: String) {
+    Log.v("SAA:", "PhotoContent: $uriAsString")
     if (uriAsString.isNotEmpty()) {
+        Log.v("SAA:", "isNotEmpty")
+
         val context = LocalContext.current
         // Create a remembered variable to store the loaded image bitmap
         var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
@@ -93,6 +97,8 @@ fun PhotoContent(uriAsString: String) {
                 }
             }
         }
+    } else {
+        Log.v("SAA:", "isEmpty")
     }
 
 
